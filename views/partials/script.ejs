@@ -1,0 +1,132 @@
+<script src="/assets/js/vendor-all.min.js"></script>
+<script src="/assets/js/plugins/bootstrap.min.js"></script>
+<script src="/assets/js/ripple.js"></script>
+<script src="/assets/js/pcoded.min.js"></script>
+<script>
+    function getImage(src,id) {
+        $('.showImage img').attr('src', src);
+        $('#imageId').val(id)
+    }
+    function status(id) {
+        const status = $('#switch-'+id).prop('checked')
+        $.ajax({
+            url: '/admin/<%-module%>/status',
+            type: 'POST',
+            data: {id, status},
+            success: function(results){} 
+        })
+    }
+    function popupDelete(id,name) {
+        $('#deleteText').text(name)
+        $('#deleteId').val(id)
+    }
+    function deleteRow() {
+        const id =$('#deleteId').val()
+        $.ajax({
+            url: '/admin/<%-module%>/delete',
+            type: 'POST',
+            data: {id},
+            success: function(results){
+                $('.loading').hide()
+                $('#tr_'+id).remove()
+            } 
+        })
+    }
+    $(document).ready(function(){
+        $('#formData').on('submit', function(e){
+            e.preventDefault()
+            const array = $('form').serializeArray()
+            const data = {}
+            for (let index = 0; index < array.length; index++) {
+                data[array[index].name] = array[index].value
+            }
+            const module = '<%-module%>';
+            if(module == 'post' || module == 'category'){
+                data['content'] = CKEDITOR.instances['content'].getData();
+            }
+            const id=$('#idEdit').val()
+            $.ajax({
+                url: '/admin/<%-module%>/process?id='+id,
+                type: 'POST',
+                beforeSend: function(){ $('.loading').show() },
+                data, success: function(results){
+                    $('.loading').hide()
+                    if(results.length == 0){
+                        if(window.location.pathname.includes('add')){
+                            alert('Thêm thành công !!!')
+                            window.location.href = '/admin/<%-module%>/index'
+                        }else if(window.location.pathname.includes('edit')){
+                            $('.save').append('<div class="alert alert-success mt-3" role="alert">Đã Cập Nhật</div>')
+                        }
+                    }else{
+                        $('.alert').remove()
+                        $('.error').text('')
+                        results.forEach((e)=>{
+                            const key=Object.keys(e)[0]
+                            $('.error_'+key).text(e[key])
+                        })
+                    }
+                } 
+            })
+        })
+        $('#fileUpload').on('change', function(e){
+            let data = new FormData();
+            data.append('file', this.files[0])
+            const id =$('#imageId').val()
+            data.append('id', id)
+            $.ajax({
+                url: '/admin/<%-module%>/upload',
+                type: 'POST',
+                data,
+                contentType: false,
+                cache: false,
+                processData:false,
+                beforeSend: function(){ $('.loading').show() },
+                success: function(results){
+                    if(results['kq']==1){
+                        $('#tr_'+id + ' img').attr('src', results['path']);
+                        $('.showImage img').attr('src', results['path']);
+                    }else{
+                        console.log(results);
+                    }
+                } 
+            })
+        })
+    })
+    function titleChangeToSlug() {
+        var title, slug;
+        //Lấy text từ thẻ input title 
+        title = document.getElementById("title").value;
+        //Đổi chữ hoa thành chữ thường
+        slug = title.toLowerCase();
+        //Đổi ký tự có dấu thành không dấu
+        slug = slug.replace(/á|à|ả|ạ|ã|ă|ắ|ằ|ẳ|ẵ|ặ|â|ấ|ầ|ẩ|ẫ|ậ/gi, 'a');
+        slug = slug.replace(/é|è|ẻ|ẽ|ẹ|ê|ế|ề|ể|ễ|ệ/gi, 'e');
+        slug = slug.replace(/i|í|ì|ỉ|ĩ|ị/gi, 'i');
+        slug = slug.replace(/ó|ò|ỏ|õ|ọ|ô|ố|ồ|ổ|ỗ|ộ|ơ|ớ|ờ|ở|ỡ|ợ/gi, 'o');
+        slug = slug.replace(/ú|ù|ủ|ũ|ụ|ư|ứ|ừ|ử|ữ|ự/gi, 'u');
+        slug = slug.replace(/ý|ỳ|ỷ|ỹ|ỵ/gi, 'y');
+        slug = slug.replace(/đ/gi, 'd');
+        //Xóa các ký tự đặt biệt
+        slug = slug.replace(/\`|\~|\!|\@|\#|\||\$|\%|\^|\&|\*|\(|\)|\+|\=|\,|\.|\/|\?|\>|\<|\'|\"|\:|\;|_/gi, '');
+        //Đổi khoảng trắng thành ký tự gạch ngang
+        slug = slug.replace(/ /gi, "-");
+        //Đổi nhiều ký tự gạch ngang liên tiếp thành 1 ký tự gạch ngang
+        //Phòng trường hợp người nhập vào quá nhiều ký tự trắng
+        slug = slug.replace(/\-\-\-\-\-/gi, '-');
+        slug = slug.replace(/\-\-\-\-/gi, '-');
+        slug = slug.replace(/\-\-\-/gi, '-');
+        slug = slug.replace(/\-\-/gi, '-');
+        //Xóa các ký tự gạch ngang ở đầu và cuối
+        slug = '@' + slug + '@';
+        slug = slug.replace(/\@\-|\-\@|\@/gi, '');
+        //In slug ra textbox có id “slug”
+        document.getElementById('slug').value = slug;
+    }
+</script>
+<script src="/ckeditor/ckeditor.js"></script>
+<script src="/ckfinder/ckfinder.js"></script>
+<script>
+var editor=CKEDITOR.replace('content');
+CKFinder.setupCKEditor(editor);
+</script>

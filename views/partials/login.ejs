@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+	<title>Login</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<link rel="icon" href="assets/images/favicon.ico" type="image/x-icon">
+	<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<div class="auth-wrapper">
+	<div class="auth-content">
+		<div class="card">
+			<form id="loginForm">
+				<div class="row align-items-center text-center">
+					<div class="col-md-12">
+						<div class="card-body">
+							<img src="assets/images/logo-dark.png" alt="" class="img-fluid mb-4">
+							<h4 class="mb-3 f-w-400">Đăng Nhập</h4>
+							<div class="form-group mb-3">
+								<label class="floating-label" for="Email">Email</label>
+								<input type="email" class="form-control" id="Email" placeholder="" required>
+							</div>
+							<div class="form-group mb-4">
+								<label class="floating-label" for="Password">Password</label>
+								<input type="password" class="form-control" id="Password" placeholder="" required>
+							</div>
+							<button type="submit" class="btn btn-block btn-primary mb-4">Đăng Nhập</button>
+						</div>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+<script src="assets/js/vendor-all.min.js"></script>
+<script src="assets/js/plugins/bootstrap.min.js"></script>
+<script src="assets/js/ripple.js"></script>
+<script src="assets/js/pcoded.min.js"></script>
+<script>
+$(document).ready(function(){
+	$('#loginForm').on('submit', function(e){
+		e.preventDefault();
+		const email = $('#Email').val()
+		const password = $('#Password').val()
+		$.ajax({
+			url: '/login/proccess',
+			type: 'POST',
+			data: {email, password},
+			success: function(results){
+				(results['kq']==true) 
+				? window.location.href = '/admin/dashboard/index'
+				: alert('Đăng nhập thất bại !!!')
+			}
+		})
+		return false
+	})
+})
+</script>
+</body></html>

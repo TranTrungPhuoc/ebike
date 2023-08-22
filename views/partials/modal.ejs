@@ -1,0 +1,47 @@
+<div id="deleteModal" class="modal fade" tabindex="-1" role="dialog"
+    aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">Thông Báo</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                    aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Bạn có chắc chắn muốn xoá <span class="text-danger" id="deleteText"></span>?</p>
+                <input type="hidden" id="deleteId"/>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal" onclick="deleteRow()">Xoá</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Thoát</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="imageModal" class="modal fade" tabindex="-1" role="dialog"
+    aria-labelledby="imageModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="imageModalLabel">Thông Báo</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                    aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="imageUpload">
+                    <label for="fileUpload" class="form-label">Tải Ảnh</label>
+                    <input class="form-control" type="file" name="file" id="fileUpload">
+                </div>
+                <div class="showImage mt-3">
+                    <img src="" alt="" class="img-fluid img-radius wid-150">
+                    <input type="hidden" id="imageId"/>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger">Xóa Ảnh</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Thoát</button>
+            </div>
+        </div>
+    </div>
+</div>

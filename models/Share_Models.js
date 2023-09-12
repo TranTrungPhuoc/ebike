@@ -5,5 +5,13 @@ class Share_Models extends Models{
         super(table)
         this.table = Schema
     }
+    async getItemsHome(limit){
+        return await this.table
+        .aggregate([
+            {$match: {status: true}},
+            {$sort:{created: -1}},
+            {$limit: limit}
+        ]).exec()
+    }
 }
 module.exports = new Share_Models

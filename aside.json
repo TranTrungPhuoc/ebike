@@ -6,12 +6,10 @@
         { "title": "Menu", "link": "menu", "home": "index", "icon": "align-left" },
         { "title": "Chia Sẻ Kèo", "link": "share", "home": "index", "icon": "share-2" },
         { "title": "Khóa Học", "link": "course", "home": "index", "icon": "book" },
-        { "title": "Giao Diện Home", "link": "home", "home": "index", "icon": "layout" },
-        { "title": "Cấu Hình Site", "link": "site", "home": "edit/64e2090f1ab901dac75c5346", "icon": "settings" },
-        { "title": "Cấu Hình Mail", "link": "mail", "home": "edit/64e2090f1ab901dac75c5346", "icon": "settings" },
         { "title": "Thư Viện Ảnh", "link": "library", "home": "index", "icon": "image" },
-        { "title": "Mạng Xã Hội", "link": "network", "home": "index", "icon": "share-2" },
+        { "title": "Cấu Hình Site", "link": "site", "home": "edit/64e2090f1ab901dac75c5346", "icon": "settings" },
         { "title": "Liên Hệ", "link": "contact", "home": "index", "icon": "phone-call" },
-        { "title": "Thành Viên", "link": "user", "home": "index", "icon": "users" }
+        { "title": "Mạng Xã Hội", "link": "network", "home": "index", "icon": "share-2" },
+        { "title": "Cấu Hình Mail", "link": "mail", "home": "edit/64e2090f1ab901dac75c5346", "icon": "settings" }
     ]
 }

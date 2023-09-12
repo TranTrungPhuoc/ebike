@@ -2,6 +2,7 @@ const Controllers = require('../helpers/Controllers')
 const Html = require('../helpers/Html')
 const Post_Models = require('../models/Post_Models')
 const Category_Models = require('../models/Category_Models')
+const User_Models = require('../models/User_Models')
 const Validation=require('../helpers/Validatation')
 const Error=require('../helpers/Error')
 const Convert=require('../helpers/Convert')
@@ -75,21 +76,43 @@ class Post_Controllers extends Controllers{
         return [
             {title: 'Avatar', class:'text-center', width: '5%'},
             {title: 'Tiêu Đề', class:'', width: ''},
-            {title: 'Ngày Tạo', class: 'text-center', width: '15%'},
-            {title: 'Hiển Thị', class: 'text-center', width: '10%'},
-            {title: 'Chức Năng', class: 'text-center', width: '15%'}
+            {title: 'Danh Mục', class: 'text-center', width: '15%'},
+            {title: 'Ngày Tạo', class: 'text-center', width: '10%'},
+            {title: 'Người Tạo', class: 'text-center', width: '15%'},
+            {title: 'Nổi Bật', class: 'text-center', width: '5%'},
+            {title: 'Hiển Thị', class: 'text-center', width: '5%'},
+            {title: 'Chức Năng', class: 'text-center', width: '10%'}
         ]
     }
 
+    splitString(string, so){
+        const array = string.split(' ');
+        let newString = '';
+        for (let index = 0; index < array.length; index++) {
+            if(index <= so){
+                const element = array[index];
+                newString += element + ' ';
+            }
+        }
+        newString =  newString.trim() + '...';
+        return newString;
+    }
+
     async tbodyList(){
-        const array = await this.dataCommon(this.title)
+        const link = 'https://photrader.com/';
+        const array = await this.dataCommon(this.title, {'created': -1})
         let tr='';
         for (let index = 0; index < array.length; index++) {
             let td='';
             const element = array[index]
+            const user = await User_Models.getDetail({_id:element['userID']})
+            const category = await Category_Models.getDetail({_id: element['parentID']})
             td+=this.tdImage(element['avatar']!=''?'/uploads/'+this.params(2)+'/'+element['avatar']:'/assets/images/photrader.jpeg',element['_id'])
-            td+=Html.td(element[this.title], ' align-middle')
+            td+=Html.td(Html.a(this.splitString(element[this.title], 3), link + element['slug'] + '.html', 'nav-link', '_blank'), ' align-middle')
+            td+=this.tdType(category[0][this.title])
             td+=this.tdDate(element['created'])
+            td+=this.tdUser(user[0]['email'])
+            td+=this.tdFloat(element['_id'], element['float'])
             td+=this.tdStatus(element['_id'], element['status'])
             td+=this.tdFunction(element['_id'], this.params(2), element[this.title])
             tr+=Html.tr(td,element['_id'])

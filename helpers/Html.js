@@ -5,6 +5,7 @@ class Html{
     h3(value='', _class=''){ return '<h3 class="'+_class+'">'+value+'</h3>'; }
     h4(value='', _class=''){ return '<h4 class="'+_class+'">'+value+'</h4>'; }
     h5(value='', _class=''){ return '<h5 class="'+_class+'">'+value+'</h5>'; }
+    h6(value='', _class=''){ return '<h6 class="'+_class+'">'+value+'</h6>'; }
 
     // table
     td(value, _class=''){ return '<td class="'+_class+'">' + value +'</td>'; }
@@ -18,13 +19,13 @@ class Html{
     form(value='', id='formData'){ return '<form id="'+id+'">'+value+'</form>'; }
     input(type='text', _class='', id='', value='', placeholder='', require=false, disabled=false, event=''){ return '<input type="'+type+'" class="'+_class+'" id="'+id+'" name="'+id+'" value="'+value+'" placeholder="'+placeholder+'"'+(require==true?' required':'')+(disabled==true?' disabled':'')+' '+event+' />';}
     option(value='', name='', selected=''){ return '<option value="'+value+'" '+selected+'>' + name + '</option>'; }
-    select(array=[], _class='', id='', value=''){
+    select(array=[], _class='', id='', value='', event=''){
         let str='<option value="">__Chọn__</option>'; 
         for (let index = 0; index < array.length; index++) { 
             const selected = (array[index]['value']==value.toString()) ? 'selected':''
             str+=this.option(array[index]['value'], array[index]['name'], selected)
         } 
-        return '<select class="'+_class+'" id="'+id+'" name="'+id+'">' + str + '</select>'; 
+        return '<select class="'+_class+'" id="'+id+'" name="'+id+'" '+event+'>' + str + '</select>'; 
     }
     textarea(rows=3, value='', _class='', id='', placeholder=''){ return '<textarea rows="'+rows+'" class="'+_class+'" id="'+id+'" name="'+id+'" placeholder="'+placeholder+'">' + value + '</textarea>'; }
     submit(_class='', value=''){ return '<button type="submit" class="'+_class+'">'+value+'</button>'; }
@@ -33,7 +34,7 @@ class Html{
     ckeditor(rows=3, value='', _class='', id='', placeholder=''){ return '<textarea rows="'+rows+'" class="'+_class+'" id="'+id+'" placeholder="'+placeholder+'">' + value + '</textarea>'; }
 
     // link
-    a(value='', link='', _class='nav-link'){ return '<a href="'+link+'" class="'+_class+'">' + value + '</a>';}
+    a(value='', link='', _class='nav-link', target=''){ return '<a href="'+link+'" class="'+_class+'" target="'+target+'">' + value + '</a>';}
 
     // list
     li(value='', _class='nav-item'){ return '<li class="'+_class+'">' + value + '</li>'; }
@@ -42,11 +43,12 @@ class Html{
     // different
     span(_class='', value=''){ return '<span class="'+_class+'">'+value+'</span>'; }
     icon(_class=''){ return '<i class="feather icon-'+_class+'"></i>'; }
-    div(_class='', value=''){ return '<div class="'+_class+'">' +value+ '</div>'; }
+    div(_class='', value='', id=''){ return '<div class="'+_class+'" id="'+id+'">' +value+ '</div>'; }
     p(_class='', value=''){ return '<p class="'+_class+'">' +value+ '</p>'; }
     section(_class='', value=''){ return '<section class="'+_class+'">' +value+ '</section>'; }
     image(_class='image', src='', modal='', id=''){ return '<img src="'+src+'" class="'+_class+'" '+(modal!=''?'data-bs-toggle="modal" data-bs-target="#imageModal" onClick="getImage('+"'"+src+"'"+','+"'"+id+"'"+')"':'')+'/>'; }
     spiner(_color=''){ return '<div class="spinner-border '+_color+'" role="status"> <span class="sr-only">Loading...</span> </div>'; }
-    switch(id, checked=''){ return this.div('switch d-inline', '<input type="checkbox" '+checked+' class="switcher-input" name="validation-switcher" id="switch-'+id+'" onChange="status('+"'"+id+"'"+')"><label for="switch-'+id+'" class="cr"></label>') }
+    status(id, checked=''){ return this.div('switch d-inline', '<input type="checkbox" '+checked+' class="switcher-input" name="validation-status" id="status-'+id+'" onChange="status('+"'"+id+"'"+','+"'status'"+')"><label for="status-'+id+'" class="cr"></label>') }
+    float(id, checked=''){ return this.div('switch d-inline', '<input type="checkbox" '+checked+' class="switcher-input" name="validation-float" id="float-'+id+'" onChange="status('+"'"+id+"'"+','+"'float'"+')"><label for="float-'+id+'" class="cr"></label>') }
 }
 module.exports = new Html

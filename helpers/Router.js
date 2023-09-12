@@ -23,6 +23,7 @@ const array = [
 for (let index = 0; index < array.length; index++) {
     const element = array[index];
     router.use( '/admin/'+element.toLowerCase(), require('../routers/'+element+'_' + prefix))
+    router.use( '/api/'+element.toLowerCase(), require('../routers/'+element+'_' + prefix))
 }
 router.get('/*', (req, res) => res.render('error'))
 module.exports=router

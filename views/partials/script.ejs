@@ -3,16 +3,59 @@
 <script src="/assets/js/ripple.js"></script>
 <script src="/assets/js/pcoded.min.js"></script>
 <script>
+    function sort(id) {
+        const sort = $('#sort_'+id).val()
+        $.ajax({
+            url: '/admin/<%-module%>/sort',
+            type: 'POST',
+            beforeSend: function(){ $('.loading').show() },
+            data: {id, sort},
+            success: function(results){
+                $('.loading').hide()
+            } 
+        })
+        return false;
+    }
+    function copy(id) {
+        const currentURL = window.location.href.split('/');
+        const img = $('.id_'+id+' img').attr('src')
+        navigator.clipboard.writeText(currentURL[0]+'/'+currentURL[1]+'/'+currentURL[2] + img);
+    }
+    function loadLibrary() {
+        $.ajax({
+            url: '/admin/library/load',
+            type: 'POST',
+            beforeSend: function(){ $('.loading').show() },
+            success: function(results){
+                $('.loading').hide()
+                const array = results['data'];
+                let str='<div class="row">';
+                for (let index = 0; index < array.length; index++) {
+                    str+='<div class="col-2 mb-3">';
+                        str+='<div class="image id_'+array[index]['_id']+'">';
+                            str+='<img src="/uploads/library/'+array[index]['avatar']+'" class="img-thumbnail">';
+                        str+='</div>';
+                        str+='<div class="copy">';
+                            str+='<button class="btn btn-outline-success has-ripple form-control" onclick="copy('+"'"+array[index]['_id']+"'"+')"><i class="feather icon-copy"></i> COPY</button>';
+                        str+='</div>';
+                    str+='</div>';
+                }
+                str+='</div>';
+                $('.libraries').html(str)
+            } 
+        })
+        return false;
+    }
     function getImage(src,id) {
         $('.showImage img').attr('src', src);
         $('#imageId').val(id)
     }
-    function status(id) {
-        const status = $('#switch-'+id).prop('checked')
+    function status(id, key) {
+        const status = $('#'+key+'-'+id).prop('checked')
         $.ajax({
             url: '/admin/<%-module%>/status',
             type: 'POST',
-            data: {id, status},
+            data: {id, status, key},
             success: function(results){} 
         })
     }
@@ -56,6 +99,7 @@
                             alert('Thêm thành công !!!')
                             window.location.href = '/admin/<%-module%>/index'
                         }else if(window.location.pathname.includes('edit')){
+                            $('.save .alert').remove()
                             $('.save').append('<div class="alert alert-success mt-3" role="alert">Đã Cập Nhật</div>')
                         }
                     }else{
@@ -92,14 +136,41 @@
                 } 
             })
         })
+        $('#libraryUpload').on('change', function(e){
+            let data = new FormData();
+            data.append('file', this.files[0])
+            $.ajax({
+                url: '/admin/library/uploadFree',
+                type: 'POST',
+                data,
+                contentType: false,
+                cache: false,
+                processData:false,
+                beforeSend: function(){ $('.loading').show() },
+                success: function(results){
+                    $('.loading').hide()
+                    const array = results['data'];
+                    let str='<div class="row">';
+                    for (let index = 0; index < array.length; index++) {
+                        str+='<div class="col-2 mb-3">';
+                            str+='<div class="image id_'+array[index]['_id']+'">';
+                                str+='<img src="/uploads/library/'+array[index]['avatar']+'" class="img-thumbnail">';
+                            str+='</div>';
+                            str+='<div class="copy">';
+                                str+='<button class="btn btn-outline-success has-ripple form-control" onclick="copy('+"'"+array[index]['_id']+"'"+')"><i class="feather icon-copy"></i> COPY</button>';
+                            str+='</div>';
+                        str+='</div>';
+                    }
+                    str+='</div>';
+                    $('.libraries').html(str)
+                } 
+            })
+        })
     })
     function titleChangeToSlug() {
         var title, slug;
-        //Lấy text từ thẻ input title 
         title = document.getElementById("title").value;
-        //Đổi chữ hoa thành chữ thường
         slug = title.toLowerCase();
-        //Đổi ký tự có dấu thành không dấu
         slug = slug.replace(/á|à|ả|ạ|ã|ă|ắ|ằ|ẳ|ẵ|ặ|â|ấ|ầ|ẩ|ẫ|ậ/gi, 'a');
         slug = slug.replace(/é|è|ẻ|ẽ|ẹ|ê|ế|ề|ể|ễ|ệ/gi, 'e');
         slug = slug.replace(/i|í|ì|ỉ|ĩ|ị/gi, 'i');
@@ -107,26 +178,16 @@
         slug = slug.replace(/ú|ù|ủ|ũ|ụ|ư|ứ|ừ|ử|ữ|ự/gi, 'u');
         slug = slug.replace(/ý|ỳ|ỷ|ỹ|ỵ/gi, 'y');
         slug = slug.replace(/đ/gi, 'd');
-        //Xóa các ký tự đặt biệt
         slug = slug.replace(/\`|\~|\!|\@|\#|\||\$|\%|\^|\&|\*|\(|\)|\+|\=|\,|\.|\/|\?|\>|\<|\'|\"|\:|\;|_/gi, '');
-        //Đổi khoảng trắng thành ký tự gạch ngang
         slug = slug.replace(/ /gi, "-");
-        //Đổi nhiều ký tự gạch ngang liên tiếp thành 1 ký tự gạch ngang
-        //Phòng trường hợp người nhập vào quá nhiều ký tự trắng
         slug = slug.replace(/\-\-\-\-\-/gi, '-');
         slug = slug.replace(/\-\-\-\-/gi, '-');
         slug = slug.replace(/\-\-\-/gi, '-');
         slug = slug.replace(/\-\-/gi, '-');
-        //Xóa các ký tự gạch ngang ở đầu và cuối
         slug = '@' + slug + '@';
         slug = slug.replace(/\@\-|\-\@|\@/gi, '');
-        //In slug ra textbox có id “slug”
         document.getElementById('slug').value = slug;
     }
 </script>
 <script src="/ckeditor/ckeditor.js"></script>
-<script src="/ckfinder/ckfinder.js"></script>
-<script>
-var editor=CKEDITOR.replace('content');
-CKFinder.setupCKEditor(editor);
-</script>
+<script>var editor=CKEDITOR.replace('content');</script>

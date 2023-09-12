@@ -1,6 +1,7 @@
 const Controllers = require('../helpers/Controllers')
 const Html = require('../helpers/Html')
 const Library_Models = require('../models/Library_Models')
+const User_Models = require('../models/User_Models')
 const Validation=require('../helpers/Validatation')
 const Error=require('../helpers/Error')
 const Convert=require('../helpers/Convert')
@@ -36,7 +37,8 @@ class Library_Controllers extends Controllers{
         return [
             {value: 'logoTop', name: 'Logo Top'},
             {value: 'favicon', name: 'Favicon'},
-            {value: 'logoBottom', name: 'Logo Bottom'}
+            {value: 'logoBottom', name: 'Logo Bottom'},
+            {value: 'bannerTop', name: 'Banner Top'}
         ]
     }
 
@@ -52,22 +54,25 @@ class Library_Controllers extends Controllers{
             {title: 'Avatar', class:'text-center', width: '5%'},
             {title: 'Tiêu Đề', class:'', width: ''},
             {title: 'Loại Ảnh', class: 'text-center', width: '10%'},
-            {title: 'Ngày Tạo', class: 'text-center', width: '15%'},
-            {title: 'Hiển Thị', class: 'text-center', width: '10%'},
-            {title: 'Chức Năng', class: 'text-center', width: '15%'}
+            {title: 'Ngày Tạo', class: 'text-center', width: '10%'},
+            {title: 'Người Tạo', class: 'text-center', width: '15%'},
+            {title: 'Hiển Thị', class: 'text-center', width: '5%'},
+            {title: 'Chức Năng', class: 'text-center', width: '10%'}
         ]
     }
 
     async tbodyList(){
-        const array = await this.dataCommon(this.title)
+        const array = await this.dataCommon(this.title, {'created': -1})
         let tr='';
         for (let index = 0; index < array.length; index++) {
             let td='';
             const element = array[index]
+            const user = await User_Models.getDetail({_id:element['userID']})
             td+=this.tdImage(element['avatar']!=''?'/uploads/'+this.params(2)+'/'+element['avatar']:'/assets/images/photrader.jpeg',element['_id'])
             td+=Html.td(element[this.title], ' align-middle')
             td+=this.tdType(element['type'])
             td+=this.tdDate(element['created'])
+            td+=this.tdUser(user[0]['email'])
             td+=this.tdStatus(element['_id'], element['status'])
             td+=this.tdFunction(element['_id'], this.params(2), element[this.title])
             tr+=Html.tr(td,element['_id'])

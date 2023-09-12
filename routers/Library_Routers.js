@@ -7,6 +7,7 @@ router.get('/edit/:id', (req, res) => new Controllers(req, res).form())
 router.post('/process', (req, res) => new Controllers(req, res).process())
 router.post('/delete', (req, res) => new Controllers(req, res).delete())
 router.post('/status', (req, res) => new Controllers(req, res).status())
+router.post('/load', (req, res) => new Controllers(req, res).load())
 const multer  = require('multer')
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -48,4 +49,17 @@ router.post('/upload', function (req, res, next) {
     })
 },
 (req, res) => new Controllers(req, res).upload())
+router.post('/uploadFree', function (req, res, next) {
+    upload(req, res, function (err) {
+        if (err instanceof multer.MulterError) {
+            res.send({kq:0, err})
+        } else if (err) {
+            res.send({kq:0, err})
+        }else{
+            res.locals.file = {path: '/uploads/library/', value: req.file['filename']};
+            next()
+        }
+    })
+},
+(req, res) => new Controllers(req, res).loadLibrary())
 module.exports=router

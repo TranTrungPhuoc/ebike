@@ -48,4 +48,8 @@ router.post('/upload', function (req, res, next) {
     })
 },
 (req, res) => new Controllers(req, res).upload())
+
+const Api = require('../api/Share_Api')
+router.get('/getItemsHome', (req, res) => new Api(req, res).getItemsHome())
+
 module.exports=router

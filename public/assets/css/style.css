@@ -6432,10 +6432,10 @@ textarea.form-control-lg {
 }
 
 .modal-fullscreen {
-    width: 100vw;
+    width: 95vw;
     max-width: none;
     height: 100%;
-    margin: 0;
+    margin: auto;
 }
 
 .modal-fullscreen .modal-content {

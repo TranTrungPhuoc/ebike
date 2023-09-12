@@ -1,6 +1,7 @@
 const Controllers = require('../helpers/Controllers')
 const Html = require('../helpers/Html')
 const Course_Models = require('../models/Course_Models')
+const User_Models = require('../models/User_Models')
 const Validation=require('../helpers/Validatation')
 const Error=require('../helpers/Error')
 const Convert=require('../helpers/Convert')
@@ -53,23 +54,26 @@ class Course_Controllers extends Controllers{
             {title: 'Email', class:'text-center', width: ''},
             {title: 'Điện Thoại', class:'text-center', width: ''},
             {title: 'Khóa Học', class:'text-center', width: ''},
-            {title: 'Ngày Tạo', class: 'text-center', width: '15%'},
-            {title: 'Hiển Thị', class: 'text-center', width: '10%'},
-            {title: 'Chức Năng', class: 'text-center', width: '15%'}
+            {title: 'Ngày Tạo', class: 'text-center', width: '10%'},
+            {title: 'Người Tạo', class: 'text-center', width: '15%'},
+            {title: 'Hiển Thị', class: 'text-center', width: '5%'},
+            {title: 'Chức Năng', class: 'text-center', width: '10%'}
         ]
     }
 
     async tbodyList(){
-        const array = await this.dataCommon(this.title)
+        const array = await this.dataCommon(this.title, {'created': -1})
         let tr='';
         for (let index = 0; index < array.length; index++) {
             let td='';
             const element = array[index]
-            td+=Html.td(element[this.title], 'text-center')
-            td+=Html.td(element['email'], 'text-center')
-            td+=Html.td(element['phone'], 'text-center')
+            const user = await User_Models.getDetail({_id:element['userID']})
+            td+=Html.td(element[this.title], 'align-middle text-center')
+            td+=Html.td(element['email'], 'align-middle text-center')
+            td+=Html.td(element['phone'], 'align-middle text-center')
             td+=this.tdType(element['schedule']+'.000.000')
             td+=this.tdDate(element['created'])
+            td+=this.tdUser(user[0]['email'])
             td+=this.tdStatus(element['_id'], element['status'])
             td+=this.tdFunction(element['_id'], this.params(2), element[this.title])
             tr+=Html.tr(td,element['_id'])

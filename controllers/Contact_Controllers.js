@@ -57,7 +57,7 @@ class Contact_Controllers extends Controllers{
     }
 
     async tbodyList(){
-        const array = await this.dataCommon(this.title)
+        const array = await this.dataCommon(this.title, {'created': -1})
         let tr='';
         for (let index = 0; index < array.length; index++) {
             let td='';

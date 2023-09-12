@@ -1,6 +1,7 @@
 const Controllers = require('../helpers/Controllers')
 const Html = require('../helpers/Html')
 const Share_Models = require('../models/Share_Models')
+const User_Models = require('../models/User_Models')
 const Validation=require('../helpers/Validatation')
 const Error=require('../helpers/Error')
 const Convert=require('../helpers/Convert')
@@ -72,28 +73,29 @@ class Share_Controllers extends Controllers{
             {title: 'Entry', class: 'text-center', width: ''},
             {title: 'SL', class: 'text-center', width: ''},
             {title: 'TP', class: 'text-center', width: ''},
-            {title: 'Link', class: 'text-center', width: ''},
             {title: 'Kết Quả', class: 'text-center', width: ''},
-            {title: 'Ngày Tạo', class: 'text-center', width: '15%'},
-            {title: 'Hiển Thị', class: 'text-center', width: '10%'},
-            {title: 'Chức Năng', class: 'text-center', width: '15%'}
+            {title: 'Ngày Tạo', class: 'text-center', width: '10%'},
+            {title: 'Người Tạo', class: 'text-center', width: '15%'},
+            {title: 'Hiển Thị', class: 'text-center', width: '5%'},
+            {title: 'Chức Năng', class: 'text-center', width: '10%'}
         ]
     }
 
     async tbodyList(){
-        const array = await this.dataCommon(this.title)
+        const array = await this.dataCommon(this.title, {'created': -1})
         let tr='';
         for (let index = 0; index < array.length; index++) {
             let td='';
             const element = array[index]
+            const user = await User_Models.getDetail({_id:element['userID']})
             td+=this.tdImage(element['avatar']!=''?'/uploads/'+this.params(2)+'/'+element['avatar']:'/assets/images/photrader.jpeg',element['_id'])
             td+=Html.td(element[this.title], 'align-middle text-center')
             td+=Html.td(element['entry'], 'align-middle text-center')
             td+=Html.td(element['sl'], 'align-middle text-center')
             td+=Html.td(element['tp'], 'align-middle text-center')
-            td+=Html.td(element['link'], 'align-middle text-center')
             td+=this.tdType(element['result'])
             td+=this.tdDate(element['created'])
+            td+=this.tdUser(user[0]['email'])
             td+=this.tdStatus(element['_id'], element['status'])
             td+=this.tdFunction(element['_id'], this.params(2), element[this.title])
             tr+=Html.tr(td,element['_id'])

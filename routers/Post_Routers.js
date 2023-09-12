@@ -1,5 +1,6 @@
 const express = require('express')
 const router = express.Router()
+
 const Controllers = require('../controllers/Post_Controllers')
 router.get('/index', (req, res) => new Controllers(req, res).index())
 router.get('/add', (req, res) => new Controllers(req, res).form())
@@ -48,4 +49,11 @@ router.post('/upload', function (req, res, next) {
     })
 },
 (req, res) => new Controllers(req, res).upload())
+
+const Api = require('../api/Post_Api')
+router.get('/getRelative/:slug', (req, res) => new Api(req, res).getRelative())
+router.get('/viewMore', (req, res) => new Api(req, res).viewMore())
+router.get('/feature', (req, res) => new Api(req, res).feature())
+router.get('/getDetailSlug/:slug', (req, res) => new Api(req, res).getDetailSlug())
+
 module.exports=router

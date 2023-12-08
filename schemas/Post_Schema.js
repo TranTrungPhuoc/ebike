@@ -11,6 +11,9 @@ const schema = new mongoose.Schema({
     avatar: { type: String, default: '' },
     video: { type: String, default: '' },
 
+    price: { type: Number, default: 0 },
+    linkRegister: { type: String, default: '' },
+
     status: { type: Boolean, default: true },
     float: { type: Boolean, default: false },
     view: { type: Number, default: 0 },

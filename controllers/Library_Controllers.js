@@ -38,7 +38,9 @@ class Library_Controllers extends Controllers{
             {value: 'logoTop', name: 'Logo Top'},
             {value: 'favicon', name: 'Favicon'},
             {value: 'logoBottom', name: 'Logo Bottom'},
-            {value: 'bannerTop', name: 'Banner Top'}
+            {value: 'bannerTop', name: 'Banner Top'},
+            {value: 'logoTrade', name: 'Logo Trade'},
+            {value: 'trade', name: 'Trade Icon'}
         ]
     }
 

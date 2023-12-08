@@ -5,5 +5,8 @@ class Library_Models extends Models{
         super(table)
         this.table = Schema
     }
+    async getDetailApi(type){
+        return await this.table.find({type}).exec();
+    }
 }
 module.exports = new Library_Models

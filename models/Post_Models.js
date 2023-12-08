@@ -1,6 +1,7 @@
 const Models = require('../helpers/Models')
 const Schema = require('../schemas/Post_Schema')
 const Category_Model = require('../schemas/Category_Schema')
+const mongoose = require('mongoose');
 class Post_Models extends Models{
     constructor(table){
         super(table)
@@ -21,7 +22,7 @@ class Post_Models extends Models{
                             {$match: {slug: {$ne: slug}}},
                             {$sort: {created: -1}},
                             {$limit: 7},
-                            {$project: { title: true, slug: true, avatar: true, description: true }}
+                            {$project: { title: true, slug: true, avatar: true, description: true, created: true }}
                         ],
                         as: 'Posts'
                     }
@@ -86,6 +87,66 @@ class Post_Models extends Models{
                     localField: 'parentID',
                     foreignField: '_id',
                     pipeline: [
+                        {
+                            $lookup: {
+                                from: 'categories',
+                                localField: 'parentID',
+                                foreignField: '_id',
+                                pipeline: [
+                                    {$project: { title: true, slug: true }}
+                                ],
+                                as: 'categoryParent'
+                            }
+                        },
+                        {$project: { title: true, slug: true, categoryParent: true }}
+                    ],
+                    as: 'category'
+                }
+            },
+            {
+                $lookup: {
+                    from: 'users',
+                    localField: 'userID',
+                    foreignField: '_id',
+                    pipeline: [
+                        {$project: { email: true, avatar: true, description: true }}
+                    ],
+                    as: 'user'
+                }
+            },
+            {
+                $project:{
+                    parentID: false,
+                    userID: false,
+                    __v: false
+                }
+            }
+        ]).exec()
+    }
+    async check(id){
+        return await this.table.find({_id: new mongoose.Types.ObjectId(id)}).exec()
+    }
+    async view(id, view){
+        await this.table.updateMany(
+            { _id: new mongoose.Types.ObjectId(id) },
+            { view, updated: new Date() }
+        )
+        return await this.table.find({
+            _id: new mongoose.Types.ObjectId(id)
+        }).exec()
+    }
+    async search(key, page, limit){
+        return await this.table.aggregate([
+            {$match: {title: { '$regex': key, '$options': 'i' }} },
+            { $sort: {created: -1} },
+            { $skip: page },
+            { $limit: limit },
+            {
+                $lookup: {
+                    from: 'categories',
+                    localField: 'parentID',
+                    foreignField: '_id',
+                    pipeline: [
                         {$project: { title: true, slug: true }}
                     ],
                     as: 'category'
@@ -97,13 +158,14 @@ class Post_Models extends Models{
                     localField: 'userID',
                     foreignField: '_id',
                     pipeline: [
-                        {$project: { email: true }}
+                        {$project: { email: true, avatar: true, description: true }}
                     ],
                     as: 'user'
                 }
             },
             {
                 $project:{
+                    content: false,
                     parentID: false,
                     userID: false,
                     __v: false

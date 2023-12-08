@@ -69,6 +69,7 @@ class User_Controllers extends Controllers{
             { title: 'Điện Thoại', type: 'tel', col: 6, class: 'phone form-control ', id: 'phone', value: (data.length==0)?'':data[0]['phone'], placeholder: 'Ví dụ: 0333444555', require: false, disabled: false, check: true, event: '' },
             { title: 'Mật Khẩu', type: 'password', col: 6, class: 'password form-control ', id: 'password', value:'', placeholder: '******', require: false, disabled: (data.length==0)?false:true, check: true, event: '' },
             { title: 'Xác Nhận Mật Khẩu', type: 'password', col: 6, class: 're_password form-control ', id: 're_password', value:'', placeholder: '******', require: false, disabled: (data.length==0)?false:true, check: true, event: '' },
+            { title: 'Mô tả', type: 'textarea', col: 12, class: 'description form-control ', id: 'description', value: (data.length==0)?'':data[0]['description'], placeholder: '', row: 3, check: false },
         ]
     }
 

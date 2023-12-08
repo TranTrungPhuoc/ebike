@@ -5,6 +5,7 @@ const schema = new mongoose.Schema({
     password: { type: String, require: true },
     avatar: { type: String, default: '' },
     role: { type: String, default: 'user' },
+    description: { type: String, default: '' },
     userID: { type: mongoose.Types.ObjectId, default: null },
     status: { type: Boolean, default: true },
     created: { type: Date, default: new Date() },

@@ -19,10 +19,11 @@ class Html{
     form(value='', id='formData'){ return '<form id="'+id+'">'+value+'</form>'; }
     input(type='text', _class='', id='', value='', placeholder='', require=false, disabled=false, event=''){ return '<input type="'+type+'" class="'+_class+'" id="'+id+'" name="'+id+'" value="'+value+'" placeholder="'+placeholder+'"'+(require==true?' required':'')+(disabled==true?' disabled':'')+' '+event+' />';}
     option(value='', name='', selected=''){ return '<option value="'+value+'" '+selected+'>' + name + '</option>'; }
-    select(array=[], _class='', id='', value='', event=''){
-        let str='<option value="">__Chọn__</option>'; 
+    select(array=[], _class='', id='', value='', event='', valueDefault='__Chọn__'){
+        let str='<option value="">'+valueDefault+'</option>'; 
         for (let index = 0; index < array.length; index++) { 
-            const selected = (array[index]['value']==value.toString()) ? 'selected':''
+            let selected = '';
+            if(value!=null){ selected = (array[index]['value']==value.toString()) ? 'selected':''}
             str+=this.option(array[index]['value'], array[index]['name'], selected)
         } 
         return '<select class="'+_class+'" id="'+id+'" name="'+id+'" '+event+'>' + str + '</select>'; 

@@ -62,4 +62,8 @@ router.post('/uploadFree', function (req, res, next) {
     })
 },
 (req, res) => new Controllers(req, res).loadLibrary())
+
+const Api = require('../api/Library_Api')
+router.get('/getDetail', (req, res) => new Api(req, res).getDetail())
+
 module.exports=router

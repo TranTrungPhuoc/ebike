@@ -31907,7 +31907,7 @@ text.highcharts-drilldown-data-label {
     overflow: hidden;
     min-width: 100%;
     min-height: 100vh;
-    background: #4680ff;
+    background: #f2f2f3;
 }
 
 @media (min-width: 1200px) {

@@ -73,7 +73,7 @@ class Course_Controllers extends Controllers{
             td+=Html.td(element['phone'], 'align-middle text-center')
             td+=this.tdType(element['schedule']+'.000.000')
             td+=this.tdDate(element['created'])
-            td+=this.tdUser(user[0]['email'])
+            td+=this.tdUser(user.length>0?user[0]['email']:'')
             td+=this.tdStatus(element['_id'], element['status'])
             td+=this.tdFunction(element['_id'], this.params(2), element[this.title])
             tr+=Html.tr(td,element['_id'])

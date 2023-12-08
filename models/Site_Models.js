@@ -5,5 +5,9 @@ class Site_Models extends Models{
         super(table)
         this.table = Schema
     }
+
+    getList(){
+        return this.table.find().exec();
+    }
 }
 module.exports = new Site_Models

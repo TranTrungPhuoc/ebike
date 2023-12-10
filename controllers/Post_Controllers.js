@@ -6,6 +6,7 @@ const User_Models = require('../models/User_Models')
 const Validation=require('../helpers/Validatation')
 const Error=require('../helpers/Error')
 const Convert=require('../helpers/Convert')
+const mongoose = require('mongoose');
 class Post_Controllers extends Controllers{
     
     constructor(req, res){
@@ -50,22 +51,22 @@ class Post_Controllers extends Controllers{
     }
 
     async category(){
-        const array=await Category_Models.getFull({status: true}, 'title')
-        const newArray=[];
-        for (let index = 0; index < array.length; index++) {
-            newArray.push({value: array[index]['_id'], name: array[index]['title']})
+        const array=await Category_Models.getFull({status: true, type: {$ne: 'sanpham'}}, 'title parentID')
+        let str = '<option value="">__Chọn__</option>';
+        if(this.params(2) == 'add'){
+            str += this.recursiveSelect(array);
+        }else{
+            const data = await this.model.getDetail({ _id: new mongoose.Types.ObjectId(this.params(4))})
+            str += this.recursiveSelect(array, '', '', 'parentID', 'title', '_id', (data.length>0?data[0]['parentID']:''));
         }
-        return newArray;
+        return str;
     }
 
     async formList(data){
         return [
-            { title: 'Tiêu Đề', type: 'text', col: 6, class: 'title form-control ', id: 'title', value: (data.length==0)?'':data[0]['title'], placeholder: '', require: false, disabled: false, check: true, event: 'onchange=titleChangeToSlug() onkeyup=titleChangeToSlug()' },
-            { title: 'Slug', type: 'text', col: 6, class: 'slug form-control ', id: 'slug', value: (data.length==0)?'':data[0]['slug'], placeholder: '', require: false, disabled: false, check: true, event: '' },
-            { title: 'Danh Mục', type: 'select', col: 6, class: 'parentID form-control ', id: 'parentID', array: await this.category(), require: false, disabled: false, check: false, event: '' },
-            { title: 'Video', type: 'text', col: 6, class: 'video form-control ', id: 'video', value: (data.length==0)?'':data[0]['video'], placeholder: '', require: false, disabled: false, check: false, event: '' },
-            { title: 'Giá', type: 'number', col: 6, class: 'price form-control ', id: 'price', value: (data.length==0)?'':data[0]['price'], placeholder: '', require: false, disabled: false, check: false, event: '' },
-            { title: 'Link Đăng Ký', type: 'text', col: 6, class: 'linkRegister form-control ', id: 'linkRegister', value: (data.length==0)?'':data[0]['linkRegister'], placeholder: '', require: false, disabled: false, check: false, event: '' },
+            { title: 'Tiêu Đề', type: 'text', col: 4, class: 'title form-control ', id: 'title', value: (data.length==0)?'':data[0]['title'], placeholder: '', require: false, disabled: false, check: true, event: 'onchange=titleChangeToSlug() onkeyup=titleChangeToSlug()' },
+            { title: 'Slug', type: 'text', col: 4, class: 'slug form-control ', id: 'slug', value: (data.length==0)?'':data[0]['slug'], placeholder: '', require: false, disabled: false, check: true, event: '' },
+            { title: 'Danh Mục', type: 'select', col: 4, class: 'parentID form-control ', id: 'parentID', array: await this.category(), require: false, disabled: false, check: false, event: '' },
             { title: 'Mô tả', type: 'textarea', col: 12, class: 'description form-control ', id: 'description', value: (data.length==0)?'':data[0]['description'], placeholder: '', row: 3, check: false },
             { title: 'Nội Dung', type: 'ckeditor', col: 12, class: 'content form-control ', id: 'content', value: (data.length==0)?'':data[0]['content'], placeholder: '', row: 3, check: false },
             { title: 'Canonical', type: 'text', col: 6, class: 'canonical form-control ', id: 'canonical', value: (data.length==0)?'':data[0]['canonical'], placeholder: '', require: false, disabled: false, check: false, event: '' },
@@ -80,7 +81,7 @@ class Post_Controllers extends Controllers{
             {title: 'Tiêu Đề', class:'', width: ''},
             {title: 'Danh Mục', class: 'text-center', width: '15%'},
             {title: 'Ngày Tạo', class: 'text-center', width: '10%'},
-            {title: 'Người Tạo', class: 'text-center', width: '15%'},
+            {title: 'Người Tạo', class: 'text-center', width: '10%'},
             {title: 'Nổi Bật', class: 'text-center', width: '5%'},
             {title: 'Hiển Thị', class: 'text-center', width: '5%'},
             {title: 'Chức Năng', class: 'text-center', width: '10%'}
@@ -112,7 +113,7 @@ class Post_Controllers extends Controllers{
             td+=Html.td(Html.a(this.splitString(element[this.title], 3), 'https://photrader.com/' + element['slug'] + '.html', 'nav-link', '_blank'), ' align-middle')
             td+=this.tdType(category[0]!=undefined?category[0][this.title]:'')
             td+=this.tdDate(element['created'])
-            td+=this.tdUser(user[0]['email'])
+            td+=this.tdUser(user[0]['email'].split('@')[0])
             td+=this.tdFloat(element['_id'], element['float'])
             td+=this.tdStatus(element['_id'], element['status'])
             td+=this.tdFunction(element['_id'], this.params(2), element[this.title])

@@ -24,6 +24,7 @@ class Convert{
             case 'title': str='Tên'; break;
             case 'slug': str='Slug'; break;
             case 'post': str='Bài Viết'; break;
+            case 'product': str='Sản Phẩm'; break;
             case 'category': str='Danh Mục'; break;
             case 'email': str='Email'; break;
             case 'phone': str='Điện Thoại'; break;

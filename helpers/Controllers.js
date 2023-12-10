@@ -9,6 +9,7 @@ const Convert = require('./Convert')
 
 const User_Models = require('../models/User_Models')
 const Post_Models = require('../models/Post_Models')
+const Product_Models = require('../models/Product_Models')
 const Category_Models = require('../models/Category_Models')
 const Menu_Models = require('../models/Menu_Models')
 const Share_Models = require('../models/Share_Models')
@@ -27,24 +28,76 @@ class Controllers {
         this.module = this.params(2)
     }
 
+    recursiveTable(
+        array = [],
+        initial = '',
+        character = '',
+        parentID = 'parentID',
+        title = 'title',
+        slug = 'slug',
+        value = '_id',
+        type = 'type'
+    ) {
+        const link = 'https://xedienvui.vn/';
+        let tr = '';
+        for (let index = 0; index < array.length; index++) {
+            const element = array[index];
+            const valueParentID = (element[parentID]) ?? '';
+            if (valueParentID.toString() == initial.toString()) {
+                let td = '';
+                td += Html.td(Html.a(character + element[title], link + element[slug], 'nav-link', '_blank'), ' align-middle')
+                td += this.tdType(element[type])
+                td += this.tdDate(element['created'])
+                td += this.tdUser('abc@gmail.com')
+                td += this.tdStatus(element[value], element['status'])
+                td += this.tdFunction(element[value], this.params(2), element[title])
+                tr += Html.tr(td, element[value])
+                tr += this.recursiveTable(array, element[value], character + '|----- ')
+            }
+        }
+        return tr;
+    }
+
+    recursiveSelect(
+        array = [],
+        initial = '',
+        character = '',
+        parentID = 'parentID',
+        title = 'title',
+        value = '_id',
+        valueActive = ''
+    ) {
+        let str = '';
+        for (let index = 0; index < array.length; index++) {
+            const element = array[index];
+            const selected = (valueActive && valueActive.toString() == element[value].toString()) ? 'selected' : '';
+            const valueParentID = (element[parentID]) ?? '';
+            if (valueParentID.toString() == initial.toString()) {
+                str += '<option value="' + element[value] + '" ' + selected + '>' + character + element[title] + '</option>';
+                str += this.recursiveSelect(array, element[value], character + '|----- ', parentID, title, value, valueActive)
+            }
+        }
+        return str;
+    }
+
     params(so) {
         return this.req.originalUrl.split('/')[so]
     }
 
     async addHtml() {
         let categorySelect = '';
-        if (this.module == 'post') {
-            const array = await Category_Models.getList({}, '_id');
-            const options = []
-            for (let index = 0; index < array.length; index++) {
-                const element = array[index];
-                options.push({
-                    name: element['title'],
-                    value: element['_id']
-                })
-            }
-            categorySelect = Html.form(Html.select(options, 'btn btn-outline-secondary has-ripple', 'parentID', this.req.query.parentID!=undefined?this.req.query.parentID.toString():'', ' onchange="this.form.submit()"', '__DanhMục__'), 'categoryForm');
-        }
+        // if (this.module == 'post') {
+        //     const array = await Category_Models.getList({}, '_id');
+        //     const options = []
+        //     for (let index = 0; index < array.length; index++) {
+        //         const element = array[index];
+        //         options.push({
+        //             name: element['title'],
+        //             value: element['_id']
+        //         })
+        //     }
+        //     categorySelect = Html.form(Html.select(options, 'btn btn-outline-secondary has-ripple', 'parentID', this.req.query.parentID!=undefined?this.req.query.parentID.toString():'', ' onchange="this.form.submit()"', '__DanhMục__'), 'categoryForm');
+        // }
         const addButton = Html.h5(Html.a(Html.icon('plus') + ' Thêm', '/admin/' + this.module + '/add', 'btn btn-outline-primary has-ripple'));
         return Html.div('col-md-8 d-flex', addButton + categorySelect)
     }
@@ -58,7 +111,7 @@ class Controllers {
         let li = '';
         if (sumData.length > 0) {
             let sumDataNew = (sumData.length > 30) ? 30 : sumData.length;
-            if(this.req.query.parentID != undefined || this.req.query.search !=undefined){
+            if (this.req.query.parentID != undefined || this.req.query.search != undefined) {
                 sumDataNew = sumData.length
             }
             const page = this.getNumber(this.req.query.page, 1)
@@ -73,7 +126,7 @@ class Controllers {
     }
 
     async headerContent() {
-        return Html.div('card-header', Html.div('row', await this.addHtml() + this.searchHtml()))
+        return Html.div('card-header', Html.div('row', await this.addHtml() + ((this.params(2) != 'category') ? this.searchHtml() : '')))
     }
 
     async bodyContent() {
@@ -227,11 +280,65 @@ class Controllers {
         return await Post_Models.create(newArray)
     }
 
-    async index(array = []) { await this.res.render('index', { aside: this.aside(), module: this.module, main: await this.main(array), user: this.req.cookies.user[0] }) }
+    titleChangeToSlug(title) {
+        let slug;
+        slug = title.toLowerCase();
+        slug = slug.replace(/á|à|ả|ạ|ã|ă|ắ|ằ|ẳ|ẵ|ặ|â|ấ|ầ|ẩ|ẫ|ậ/gi, 'a');
+        slug = slug.replace(/é|è|ẻ|ẽ|ẹ|ê|ế|ề|ể|ễ|ệ/gi, 'e');
+        slug = slug.replace(/i|í|ì|ỉ|ĩ|ị/gi, 'i');
+        slug = slug.replace(/ó|ò|ỏ|õ|ọ|ô|ố|ồ|ổ|ỗ|ộ|ơ|ớ|ờ|ở|ỡ|ợ/gi, 'o');
+        slug = slug.replace(/ú|ù|ủ|ũ|ụ|ư|ứ|ừ|ử|ữ|ự/gi, 'u');
+        slug = slug.replace(/ý|ỳ|ỷ|ỹ|ỵ/gi, 'y');
+        slug = slug.replace(/đ/gi, 'd');
+        slug = slug.replace(/\`|\~|\!|\@|\#|\||\$|\%|\^|\&|\*|\(|\)|\+|\=|\,|\.|\/|\?|\>|\<|\'|\"|\:|\;|_/gi, '');
+        slug = slug.replace(/ /gi, "-");
+        slug = slug.replace(/\-\-\-\-\-/gi, '-');
+        slug = slug.replace(/\-\-\-\-/gi, '-');
+        slug = slug.replace(/\-\-\-/gi, '-');
+        slug = slug.replace(/\-\-/gi, '-');
+        slug = '@' + slug + '@';
+        slug = slug.replace(/\@\-|\-\@|\@/gi, '');
+        return slug;
+    }
+
+    async index(array = []) {
+
+        // const fs = require("fs");
+        // const { parse } = require("csv-parse");
+
+        // fs.createReadStream("file.csv")
+        //     .pipe(parse({ delimiter: ",", from_line: 2 }))
+        //     .on("data", async (row) => {
+                
+        //         const check = await Product_Models.getDetail({title: row[0]});
+                
+        //         if(check.length == 0){
+        //             const obj = {
+        //                 title: row[0],
+        //                     slug: this.titleChangeToSlug(row[0]),
+        //                 price: row[2]?parseInt(row[2]):0,
+        //                 avatar: row[3].split(',')[0],
+        //                 library: row[3],
+        //                 userID: new mongoose.Types.ObjectId('64dba0dda3949c4eb5d3dae3')
+        //             };
+
+        //             await Product_Models.create(obj);
+        //         }
+        //     })
+        // return
+
+        await this.res.render('index', { aside: this.aside(), module: this.module, main: await this.main(array), user: this.req.cookies.user[0] })
+    }
 
     async formHTML(id) {
         const data = await this.model.getDetail({ _id: new mongoose.Types.ObjectId(id) })
         const array = await this.formList(data)
+        let recursiveData = [];
+        if (this.params(2) == 'category' && this.params(3) == 'edit') {
+            const dataCategory = await Category_Models.getListType(data[0].type);
+            recursiveData = this.recursiveSelect(dataCategory, '', '', 'parentID', 'title', '_id', data[0]['parentID']);
+        }
+
         let str = '';
         for (let index = 0; index < array.length; index++) {
             let typeHtml = Html.input(array[index]['type'], array[index]['class'], array[index]['id'], array[index]['value'], array[index]['placeholder'], array[index]['require'], array[index]['disabled'], array[index]['event']);
@@ -239,11 +346,25 @@ class Controllers {
                 typeHtml = Html.textarea(array[index]['row'], array[index]['value'], array[index]['class'], array[index]['id'], array[index]['placeholder'])
             }
             else if (array[index]['type'] == 'select') {
-                typeHtml = Html.select(array[index]['array'], array[index]['class'], array[index]['id'], (id != undefined) ? data[0][array[index]['id']] : '')
+                typeHtml = Html.select(array[index]['array'], array[index]['class'], array[index]['id'], (id != undefined) ? data[0][array[index]['id']] : '', array[index]['event'])
+                if (
+                    this.params(3) == 'edit' &&
+                    this.params(2) == 'category' &&
+                    array[index]['id'] == 'parentID'
+                ) {
+                    let str = '<select class="form-control" id="' + array[index]['id'] + '" name="' + array[index]['id'] + '" ' + array[index]['event'] + '>';
+                    str += recursiveData;
+                    str += '</select>';
+                    typeHtml = str;
+                } else if (this.params(2) == 'product' || this.params(2) == 'post') {
+                    let str = '<select class="form-control" id="' + array[index]['id'] + '" name="' + array[index]['id'] + '" ' + array[index]['event'] + '>';
+                    str += array[index]['array'];
+                    str += '</select>';
+                    typeHtml = str;
+                }
             }
             else if (array[index]['type'] == 'ckeditor') {
                 const uploadFile = Html.button('UploadFile', 'btn-outline-success has-ripple', 'data-bs-toggle="modal" data-bs-target="#libraryModal"', 'loadLibrary()')
-                // const linkWeb = process.env.URI;
                 typeHtml = Html.ckeditor(array[index]['row'], array[index]['value'], array[index]['class'], array[index]['id'], array[index]['placeholder']) + Html.p('mt-3', uploadFile)
             }
             str += Html.div('col-md-' + array[index]['col'] + ((array[index]['type'] == 'hidden') ? ' d-none' : ''),
@@ -344,7 +465,7 @@ class Controllers {
     }
 
     async dataCommon(key = '', sort = {}) {
-        const limit = this.getNumber(this.req.query.limit, process.env.LIMIT)
+        const limit = this.getNumber(this.req.query.limit, this.params(2) != 'category'?process.env.LIMIT: 100)
         const page = this.getNumber(this.req.query.page, 0)
         const skip = (page == 1 || page == 0) ? 0 : (page - 1) * limit
         return await this.model.getList(this.search(key), '', parseInt(limit), skip, sort)
@@ -365,7 +486,7 @@ class Controllers {
         if (this.req.query.search) {
             searchObject[key] = { '$regex': this.req.query.search, '$options': 'i' }
         }
-        if(this.req.query.parentID){
+        if (this.req.query.parentID) {
             searchObject['parentID'] = new mongoose.Types.ObjectId(this.req.query.parentID)
         }
         return searchObject;

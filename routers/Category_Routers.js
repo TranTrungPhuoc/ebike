@@ -8,6 +8,7 @@ router.get('/edit/:id', (req, res) => new Controllers(req, res).form())
 router.post('/process', (req, res) => new Controllers(req, res).process())
 router.post('/delete', (req, res) => new Controllers(req, res).delete())
 router.post('/status', (req, res) => new Controllers(req, res).status())
+router.post('/listType', (req, res) => new Controllers(req, res).listType())
 
 const Api = require('../api/Category_Api')
 router.get('/getItemsNews', (req, res) => new Api(req, res).getItemsNews())

@@ -9,6 +9,7 @@ const array = [
     'Dashboard', 
     'User', 
     'Category', 
+    'Product',
     'Post', 
     'Menu', 
     'Share',

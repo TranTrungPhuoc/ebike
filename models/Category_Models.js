@@ -7,6 +7,10 @@ class Category_Models extends Models{
         this.table = Schema
     }
 
+    async getListType(type){
+        return await this.table.find({type}).select('title parentID').exec();
+    }
+
     async getItemsNews(type, limit){
         return await this.table.aggregate([
             { $match: {type, status: true} },

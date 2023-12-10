@@ -50,19 +50,18 @@ class Category_Controllers extends Controllers{
 
     typeList(){
         return [
+            {value: 'sanpham', name: 'Sản Phẩm'},
             {value: 'tintuc', name: 'Tin Tức'},
-            {value: 'tamsu', name: 'Tâm Sự'}, 
-            {value: 'sach', name: 'Sách'},
-            {value: 'video', name: 'video'},
-            {value: 'sangiaodich', name: 'Sàn Giao Dịch'}
+            {value: 'video', name: 'Video'}
         ];
     }
 
     async formList(data){
         return [
-            { title: 'Tiêu Đề', type: 'text', col: 4, class: 'title form-control ', id: 'title', value: (data.length==0)?'':data[0]['title'], placeholder: '', require: false, disabled: false, check: true, event: 'onchange=titleChangeToSlug() onkeyup=titleChangeToSlug()' },
-            { title: 'Slug', type: 'text', col: 4, class: 'slug form-control ', id: 'slug', value: (data.length==0)?'':data[0]['slug'], placeholder: '', require: false, disabled: false, check: true, event: '' },
-            { title: 'Loại', type: 'select', col: 4, class: 'type form-control ', id: 'type', array: this.typeList(), require: false, disabled: false, check: false, event: '' },
+            { title: 'Tiêu Đề', type: 'text', col: 6, class: 'title form-control ', id: 'title', value: (data.length==0)?'':data[0]['title'], placeholder: '', require: false, disabled: false, check: true, event: 'onchange=titleChangeToSlug() onkeyup=titleChangeToSlug()' },
+            { title: 'Slug', type: 'text', col: 6, class: 'slug form-control ', id: 'slug', value: (data.length==0)?'':data[0]['slug'], placeholder: '', require: false, disabled: false, check: true, event: '' },
+            { title: 'Loại', type: 'select', col: 6, class: 'type form-control ', id: 'type', array: this.typeList(), require: false, disabled: false, check: false, event: 'onchange=getListType()' },
+            { title: 'Danh Mục Cha', type: 'select', col: 6, class: 'type form-control ', id: 'parentID', array: [], require: false, disabled: false, check: false, event: '' },
             { title: 'Mô tả', type: 'textarea', col: 12, class: 'description form-control ', id: 'description', value: (data.length==0)?'':data[0]['description'], placeholder: '', row: 3, check: false },
             { title: 'Nội Dung', type: 'ckeditor', col: 12, class: 'content form-control ', id: 'content', value: (data.length==0)?'':data[0]['content'], placeholder: '', row: 3, check: false },
             { title: 'Canonical', type: 'text', col: 6, class: 'canonical form-control ', id: 'canonical', value: (data.length==0)?'':data[0]['canonical'], placeholder: '', require: false, disabled: false, check: false, event: '' },
@@ -83,22 +82,16 @@ class Category_Controllers extends Controllers{
     }
 
     async tbodyList(){
-        const link = 'https://photrader.com/';
-        const array = await this.dataCommon(this.title, {'created': -1})
-        let tr='';
-        for (let index = 0; index < array.length; index++) {
-            const element = array[index]
-            const user = await User_Models.getDetail({_id:element['userID']})
-            let td='';
-            td+=Html.td(Html.a(element[this.title], link + element['slug'], 'nav-link', '_blank'), ' align-middle')
-            td+=this.tdType(element['type'])
-            td+=this.tdDate(element['created'])
-            td+=this.tdUser(user[0]['email'])
-            td+=this.tdStatus(element['_id'], element['status'])
-            td+=this.tdFunction(element['_id'], this.params(2), element[this.title])
-            tr+=Html.tr(td,element['_id'])
-        }
-        return Html.tbody(tr)
+        const array = await this.dataCommon(this.title, {'created': 1})
+        return Html.tbody(this.recursiveTable(array))
+    }
+
+    async listType(){
+        const {type} = this.req.body;
+        const getListType = await Category_Models.getListType(type);
+        let str = '<option value="">__Chọn__</option>';
+        str += this.recursiveSelect(getListType);
+        this.res.send({data: str})
     }
 }
 module.exports = Category_Controllers

@@ -34,12 +34,17 @@ class Site_Controllers extends Controllers{
 
     async formList(data){
         return [
-            { title: 'Nội Dung Khóa Học', type: 'textarea', col: 12, class: 'contentCourse form-control ', id: 'contentCourse', value: (data.length==0)?'':data[0]['contentCourse'], placeholder: '', row: 10, require: false, disabled: false, check: false, event: '' },
-            { title: 'Nội Dung Chân Trang', type: 'textarea', col: 12, class: 'contentFooter form-control ', id: 'contentFooter', value: (data.length==0)?'':data[0]['contentFooter'], placeholder: '', row: 3, require: false, disabled: false, check: false, event: '' },
+            { title: 'Mua Hàng', type: 'text', col: 6, class: 'purchase form-control ', id: 'purchase', value: (data.length==0)?'':data[0]['purchase'], placeholder: '', require: false, disabled: false, check: false, event: '' },
+            { title: 'Bảo Hành', type: 'text', col: 6, class: 'guarantee form-control ', id: 'guarantee', value: (data.length==0)?'':data[0]['guarantee'], placeholder: '', require: false, disabled: false, check: false, event: '' },
+            { title: 'Địa Chỉ Cửa Hàng', type: 'textarea', col: 12, class: 'address form-control ', id: 'address', value: (data.length==0)?'':data[0]['address'], placeholder: '', require: false, disabled: false, check: false, event: '' },
+            
+            { title: 'Hotline', type: 'text', col: 4, class: 'hotline form-control ', id: 'hotline', value: (data.length==0)?'':data[0]['hotline'], placeholder: '', require: false, disabled: false, check: false, event: '' },
+            { title: 'CSKH', type: 'text', col: 4, class: 'cskh form-control ', id: 'cskh', value: (data.length==0)?'':data[0]['cskh'], placeholder: '', require: false, disabled: false, check: false, event: '' },
+            { title: 'Email', type: 'text', col: 4, class: 'email form-control ', id: 'email', value: (data.length==0)?'':data[0]['email'], placeholder: '', require: false, disabled: false, check: false, event: '' },
+
+            { title: 'Meta Title', type: 'text', col: 6, class: 'metaTitle form-control ', id: 'metaTitle', value: (data.length==0)?'':data[0]['metaTitle'], placeholder: '', require: false, disabled: false, check: false, event: '' },
+            { title: 'Copy Right', type: 'text', col: 6, class: 'copyRight form-control ', id: 'copyRight', value: (data.length==0)?'':data[0]['copyRight'], placeholder: '', require: false, disabled: false, check: false, event: '' },
             { title: 'Meta Description', type: 'textarea', col: 12, class: 'metaDescription form-control ', id: 'metaDescription', value: (data.length==0)?'':data[0]['metaDescription'], placeholder: '', require: false, disabled: false, check: false, event: '' },
-            { title: 'Meta Title', type: 'text', col: 4, class: 'metaTitle form-control ', id: 'metaTitle', value: (data.length==0)?'':data[0]['metaTitle'], placeholder: '', require: false, disabled: false, check: false, event: '' },
-            { title: 'Tiêu Đề Mạng Xã Hội', type: 'text', col: 4, class: 'titleNetwork form-control ', id: 'titleNetwork', value: (data.length==0)?'':data[0]['titleNetwork'], placeholder: '', require: false, disabled: false, check: false, event: '' },
-            { title: 'Copy Right', type: 'text', col: 4, class: 'copyRight form-control ', id: 'copyRight', value: (data.length==0)?'':data[0]['copyRight'], placeholder: '', require: false, disabled: false, check: false, event: '' },
         ]
     }
 

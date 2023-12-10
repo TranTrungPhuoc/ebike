@@ -75,6 +75,18 @@
             } 
         })
     }
+    function getListType() {
+        const type =$('#type').val()
+        $.ajax({
+            url: '/admin/<%-module%>/listType',
+            type: 'POST',
+            data: {type},
+            success: function(results){
+                $('.loading').hide()
+                $('#parentID').html(results.data);
+            } 
+        })
+    }
     $(document).ready(function(){
         $('#formData').on('submit', function(e){
             e.preventDefault()

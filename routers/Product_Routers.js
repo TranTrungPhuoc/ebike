@@ -54,9 +54,10 @@ const Api = require('../api/Product_Api')
 router.get('/getRelative/:slug', (req, res) => new Api(req, res).getRelative())
 router.get('/viewMore', (req, res) => new Api(req, res).viewMore())
 router.get('/feature', (req, res) => new Api(req, res).feature())
-router.get('/getDetailSlug/:slug', (req, res) => new Api(req, res).getDetailSlug())
 router.get('/view/:id', (req, res) => new Api(req, res).view())
 router.get('/search', (req, res) => new Api(req, res).search())
+
 router.get('/home', (req, res) => new Api(req, res).home())
+router.get('/detail', (req, res) => new Api(req, res).detail())
 
 module.exports=router

@@ -5,6 +5,30 @@ class Category_Api extends Api{
         super(req, res)
     }
 
+    async categoryHome(){
+        const data = await Category_Models.m_categoryHome();
+        return this.res.send({
+            code: 200,
+            message: "Success",
+            response: data
+        })
+    }
+
+    async menuCategory(){
+        const data = await Category_Models.m_menuCategory();
+        let response = this.recursive(data);
+        response.push({
+            title: 'Liên Hệ',
+            slug: 'contact',
+            childs: []
+        })
+        return this.res.send({
+            code: 200,
+            message: "Success",
+            response
+        })
+    }
+
     async getItemsNews(){
         const { type, limit } = this.req.query
         const data = await Category_Models.getItemsNews(type, parseInt(limit??10));

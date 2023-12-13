@@ -45,10 +45,11 @@ class Controllers {
             const valueParentID = (element[parentID]) ?? '';
             if (valueParentID.toString() == initial.toString()) {
                 let td = '';
+                td+=this.tdImage(element['avatar']!=''?'/uploads/'+this.params(2)+'/'+element['avatar']:'/assets/images/photrader.png',element['_id'])
                 td += Html.td(Html.a(character + element[title], link + element[slug], 'nav-link', '_blank'), ' align-middle')
                 td += this.tdType(element[type])
                 td += this.tdDate(element['created'])
-                td += this.tdUser('abc@gmail.com')
+                td +=this.tdFloat(element['_id'], element['float'])
                 td += this.tdStatus(element[value], element['status'])
                 td += this.tdFunction(element[value], this.params(2), element[title])
                 tr += Html.tr(td, element[value])
@@ -110,12 +111,12 @@ class Controllers {
         const sumData = await this.arrayFull()
         let li = '';
         if (sumData.length > 0) {
-            let sumDataNew = (sumData.length > 30) ? 30 : sumData.length;
+            let sumDataNew = sumData.length; //(sumData.length > 30) ? 30 : sumData.length;
             if (this.req.query.parentID != undefined || this.req.query.search != undefined) {
                 sumDataNew = sumData.length
             }
             const page = this.getNumber(this.req.query.page, 1)
-            const totalPage = Math.ceil(sumDataNew / process.env.LIMIT);
+            const totalPage = (this.params(2)!='category')?Math.ceil(sumDataNew / process.env.LIMIT):1;
             li = Html.li(Html.a(Html.icon('chevrons-left'), 'index?page=' + (page - 1) + (this.req.query.search ? '&search=' + this.req.query.search : '') + (this.req.query.parentID ? '&parentID=' + this.req.query.parentID : ''), 'page-link'), 'paginate_button page-item previous' + (page == 1 ? ' disabled' : ''))
             for (let index = 1; index <= totalPage; index++) {
                 li += Html.li(Html.a(index, '?page=' + index + (this.req.query.search ? '&search=' + this.req.query.search : '') + (this.req.query.parentID ? '&parentID=' + this.req.query.parentID : ''), 'page-link'), 'paginate_button page-item' + (page == index ? ' active' : ''))
@@ -464,11 +465,11 @@ class Controllers {
         return this.res.send({ code: 200 })
     }
 
-    async dataCommon(key = '', sort = {}) {
-        const limit = this.getNumber(this.req.query.limit, this.params(2) != 'category'?process.env.LIMIT: 100)
-        const page = this.getNumber(this.req.query.page, 0)
-        const skip = (page == 1 || page == 0) ? 0 : (page - 1) * limit
-        return await this.model.getList(this.search(key), '', parseInt(limit), skip, sort)
+    async dataCommon(key = '', sort = {}, select='title') {
+        const limit = this.getNumber(this.req.query.limit, this.params(2) != 'category'?process.env.LIMIT: 100);
+        const page = this.getNumber(this.req.query.page, 0);
+        const skip = (page == 1 || page == 0) ? 0 : (page - 1) * limit;
+        return await this.model.getList(this.search(key), select, parseInt(limit), skip, sort)
     }
 
     async dataFull(key = '') {

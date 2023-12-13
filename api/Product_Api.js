@@ -105,21 +105,28 @@ class Product_Api extends Api {
         slug = slug.replace(/\@\-|\-\@|\@/gi, '');
         return slug;
     }
-    async getDetailSlug() {
-        const { slug } = this.req.params
-        if (slug == undefined || slug.trim() == '') {
-            res.send({
-                code: 600,
-                message: "Success",
-                response: {
-                    error: "Slug không được rỗng."
-                }
-            })
-            return
-        }
-        const data = await Product_Models.getDetailSlug(slug.trim())
+    async detail() {
+        const { slug } = this.req.query
+        
+        // if (slug == undefined || slug.trim() == '') {
+        //     res.send({
+        //         code: 600,
+        //         message: "Success",
+        //         response: {
+        //             error: "Slug không được rỗng."
+        //         }
+        //     })
+        //     return
+        // }
 
-        this.res.send({data})
+        const data = await Product_Models.m_detail(slug)
+
+        this.res.send({
+            code: 200,
+            message: "Success",
+            response: data
+        })
+
         return
 
         data[0]['avatar'] = data[0]['avatar'] != '' ? this.req.protocol + '://' + this.req.headers.host + '/uploads/Product/' + data[0]['avatar'] : '';

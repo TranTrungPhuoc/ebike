@@ -51,7 +51,7 @@ class Category_Controllers extends Controllers{
     typeList(){
         return [
             {value: 'sanpham', name: 'Sản Phẩm'},
-            {value: 'tintuc', name: 'Tin Tức'},
+            {value: 'blog', name: 'Tin Tức'},
             {value: 'video', name: 'Video'}
         ];
     }
@@ -72,10 +72,11 @@ class Category_Controllers extends Controllers{
 
     theadList(){
         return [
+            {title: 'Avatar', class:'text-center', width: '5%'},
             {title: 'Tiêu Đề', class:'', width: ''},
             {title: 'Loại', class: 'text-center', width: '10%'},
             {title: 'Ngày Tạo', class: 'text-center', width: '10%'},
-            {title: 'Người Tạo', class: 'text-center', width: '15%'},
+            {title: 'Nổi Bật', class: 'text-center', width: '5%'},
             {title: 'Hiển Thị', class: 'text-center', width: '5%'},
             {title: 'Chức Năng', class: 'text-center', width: '10%'}
         ]

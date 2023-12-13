@@ -7,6 +7,9 @@ const Validation=require('../helpers/Validatation')
 const Error=require('../helpers/Error')
 const Convert=require('../helpers/Convert')
 const mongoose = require('mongoose');
+
+fs = require('fs');
+var xml2js = require('xml2js');
 class Post_Controllers extends Controllers{
     
     constructor(req, res){

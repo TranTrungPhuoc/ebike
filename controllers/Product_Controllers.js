@@ -80,9 +80,9 @@ class Product_Controllers extends Controllers{
         return [
             {title: 'Avatar', class:'text-center', width: '5%'},
             {title: 'Tiêu Đề', class:'', width: ''},
-            {title: 'Danh Mục', class: 'text-center', width: '15%'},
+            {title: 'Danh Mục', class: 'text-center', width: '10%'},
             {title: 'Ngày Tạo', class: 'text-center', width: '10%'},
-            {title: 'Người Tạo', class: 'text-center', width: '10%'},
+            {title: 'Người Tạo', class: 'text-center', width: '5%'},
             {title: 'Nổi Bật', class: 'text-center', width: '5%'},
             {title: 'Hiển Thị', class: 'text-center', width: '5%'},
             {title: 'Chức Năng', class: 'text-center', width: '10%'}

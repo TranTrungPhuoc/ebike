@@ -7,6 +7,14 @@ class Category_Models extends Models{
         this.table = Schema
     }
 
+    async m_categoryHome(){
+        return await this.table.find({status: true, float: true}).select('title slug avatar').exec();
+    }
+
+    async m_menuCategory(){
+        return await this.table.find({status: true}).select('title slug type parentID').exec();
+    }
+
     async getListType(type){
         return await this.table.find({type}).select('title parentID').exec();
     }

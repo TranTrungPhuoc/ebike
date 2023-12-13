@@ -82,7 +82,7 @@ class Product_Models extends Models{
             }}
         ]).exec()
     }
-    async getDetailSlug(slug){
+    async m_detail(slug){
         return await this.table.aggregate([
             {$match: {slug} },
             {

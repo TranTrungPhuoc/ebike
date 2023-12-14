@@ -110,7 +110,7 @@ class Product_Controllers extends Controllers{
             const element = array[index]
             const user = await User_Models.getDetail({_id:element['userID']})
             const category = await Category_Models.getDetail({_id: element['parentID']})
-            td+=this.tdImage(element['avatar']!=''?'/uploads/'+this.params(2)+'/'+element['avatar']:'/assets/images/photrader.jpeg',element['_id'])
+            td+=this.tdImage(element['avatar']!=''?'/uploads/'+this.params(2)+'/'+element['avatar']:'/assets/images/photrader.png',element['_id'])
             td+=Html.td(Html.a(element[this.title], 'https://xedienvui.vn/' + element['slug'] + '.html', 'nav-link', '_blank'), ' align-middle')
             td+=this.tdType(category[0]!=undefined?category[0][this.title]:'')
             td+=this.tdDate(element['created'])

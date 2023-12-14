@@ -12,6 +12,7 @@ class Api{
                 newArray.push({
                     title: element['title'],
                     slug: (element['type']=='sanpham'?element['slug']: (element['type']+'/'+element['slug'])),
+                    type: element['type'],
                     childs: this.recursive(array, element['_id'])
                 })
             }

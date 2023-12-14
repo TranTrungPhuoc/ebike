@@ -5,6 +5,26 @@ class Post_Api extends Api {
     constructor(req, res) {
         super(req, res)
     }
+    async new(){
+        const { type } = this.req.query
+        if (type == undefined || type.trim() == '') {
+            this.res.send({
+                code: 600,
+                message: "Success",
+                response: {
+                    error: "Slug không được rỗng."
+                }
+            })
+            return
+        }
+        const data = await Post_Models.m_new(type.trim())
+
+        this.res.send({
+            code: 200,
+            message: "Success",
+            response: data
+        })
+    }
     async getRelative() {
         const { slug } = this.req.params
         if (slug == undefined || slug.trim() == '') {

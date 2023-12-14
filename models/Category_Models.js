@@ -8,7 +8,7 @@ class Category_Models extends Models{
     }
 
     async m_categoryHome(){
-        return await this.table.find({status: true, float: true}).select('title slug avatar').exec();
+        return await this.table.find({status: true, type: 'sanpham', float: true}).select('title slug avatar').exec();
     }
 
     async m_menuCategory(){

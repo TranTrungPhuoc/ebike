@@ -7,6 +7,40 @@ class Post_Models extends Models{
         super(table)
         this.table = Schema
     }
+    async m_new(type){
+        return await Category_Model.aggregate([
+            {
+                $project:{
+                    title: true,
+                    slug: true,
+                    type: true,
+                    status: true,
+                    float: true
+                }
+            },
+            { $match: { type, float: true, status: true } },
+            {
+                $lookup: {
+                    from: 'posts',
+                    localField: '_id',
+                    foreignField: 'parentID',
+                    pipeline: [
+                        {$limit: 10},
+                        {$sort: {created: -1}},
+                        {$project: { title: true, slug: true, avatar: true, description: true, created: true }}
+                    ],
+                    as: 'Posts'
+                }
+            },
+            {
+                $project:{
+                    title: true,
+                    slug: true,
+                    Posts: true
+                }
+            }
+        ]).exec()
+    }
     async getRelative(slug){
         const post = await this.table.find({slug}).exec();
         if(post.length > 0){

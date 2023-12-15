@@ -10,6 +10,8 @@ const array = [
     'User', 
     'Category', 
     'Product',
+    'Color',
+    'Pin',
     'Post', 
     'Menu', 
     'Share',

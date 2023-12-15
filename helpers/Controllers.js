@@ -368,6 +368,39 @@ class Controllers {
                 const uploadFile = Html.button('UploadFile', 'btn-outline-success has-ripple', 'data-bs-toggle="modal" data-bs-target="#libraryModal"', 'loadLibrary()')
                 typeHtml = Html.ckeditor(array[index]['row'], array[index]['value'], array[index]['class'], array[index]['id'], array[index]['placeholder']) + Html.p('mt-3', uploadFile)
             }
+            else if (array[index]['type'] == 'checkbox') {
+                typeHtml = `
+                    <div class="form-control">
+                        <ul style="margin-bottom: 0;display: grid;column-gap: 20px;row-gap: 20px;grid-template-columns: auto auto auto auto;padding: 10px;list-style: none;">
+                            <li>
+                                <input type="checkbox" class="color" id="color" name="color" value="" placeholder="">
+                                <label>Xin chào</label>
+                            </li>
+                            <li>
+                                <input type="checkbox" class="color" id="color" name="color" value="" placeholder="">
+                                <label>Xin chào</label>
+                            </li>
+                            <li>
+                                <input type="checkbox" class="color" id="color" name="color" value="" placeholder="">
+                                <label>Xin chào</label>
+                            </li>
+                            <li>
+                                <input type="checkbox" class="color" id="color" name="color" value="" placeholder="">
+                                <label>Xin chào</label>
+                            </li>
+                            <li>
+                                <input type="checkbox" class="color" id="color" name="color" value="" placeholder="">
+                                <label>Xin chào</label>
+                            </li>
+                            <li>
+                                <input type="checkbox" class="color" id="color" name="color" value="" placeholder="">
+                                <label>Xin chào</label>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                `;
+            }
             str += Html.div('col-md-' + array[index]['col'] + ((array[index]['type'] == 'hidden') ? ' d-none' : ''),
                 Html.div('form-group fill', Html.label(array[index]['title'], 'form-label') + typeHtml + Html.span('error error_' + array[index]['id'])))
         }

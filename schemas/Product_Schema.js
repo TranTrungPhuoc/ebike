@@ -10,6 +10,8 @@ const schema = new mongoose.Schema({
     content: { type: String, default: '' },
     avatar: { type: String, default: '' },
     video: { type: String, default: '' },
+    realImage: { type: String, default: '' },
+    specifications: { type: String, default: '' },
 
     library: { type: String, default: '' },
 

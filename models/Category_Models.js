@@ -115,19 +115,19 @@ class Category_Models extends Models{
             {
                 $lookup:
                 {
-                    from: 'posts',
+                    from: 'products',
                     localField: '_id',
                     foreignField: 'parentID',
                     pipeline: [
                         {$sort: {created: -1}},
                         {$skip: page!=0?(page+limit):0},
                         {$limit: limit},
-                        {$project: { title: true, slug: true, avatar: true, description: true, created: true }}
+                        {$project: { title: true, slug: true, avatar: true, description: true, price: true, created: true }}
                     ],
-                    as: 'Posts'
+                    as: 'Products'
                 }
             },
-            {$project: { title: true, slug: true, type: true, Posts: true }}
+            {$project: { title: true, slug: true, type: true, content: true, Products: true }}
         ])
     }
 

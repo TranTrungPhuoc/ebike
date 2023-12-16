@@ -2,6 +2,8 @@ const Controllers = require('../helpers/Controllers')
 const Html = require('../helpers/Html')
 const Product_Models = require('../models/Product_Models')
 const Category_Models = require('../models/Category_Models')
+const Color_Models = require('../models/Color_Models')
+const Pin_Models = require('../models/Pin_Models')
 const User_Models = require('../models/User_Models')
 const Validation=require('../helpers/Validatation')
 const Error=require('../helpers/Error')
@@ -62,22 +64,32 @@ class Product_Controllers extends Controllers{
         return str;
     }
 
+    async color(oldArray=[]){
+        const array = await Color_Models.m_getList();
+        return this.arrCheckbox(array, 'Color', oldArray);
+    }
+
+    async pin(oldArray=[]){
+        const array = await Pin_Models.m_getList();
+        return this.arrCheckbox(array, 'Pin', oldArray);
+    }
+
     async formList(data){
         return [
             { title: 'Tiêu Đề', type: 'text', col: 6, class: 'title form-control ', id: 'title', value: (data.length==0)?'':data[0]['title'], placeholder: '', require: false, disabled: false, check: true, event: 'onchange=titleChangeToSlug() onkeyup=titleChangeToSlug()' },
             { title: 'Slug', type: 'text', col: 6, class: 'slug form-control ', id: 'slug', value: (data.length==0)?'':data[0]['slug'], placeholder: '', require: false, disabled: false, check: true, event: '' },
             { title: 'Danh Mục', type: 'select', col: 6, class: 'parentID form-control ', id: 'parentID', array: await this.category(), require: false, disabled: false, check: false, event: '' },
             { title: 'Giá', type: 'number', col: 6, class: 'price form-control ', id: 'price', value: (data.length==0)?'':data[0]['price'], placeholder: '', require: false, disabled: false, check: false, event: '' },
-            { title: 'Màu sắc', type: 'checkbox', col: 6, class: 'color form-control ', id: 'color', value: (data.length==0)?'':data[0]['color'], placeholder: '', row: 3, check: false },
-            { title: 'Pin', type: 'checkbox', col: 6, class: 'pin form-control ', id: 'pin', value: (data.length==0)?'':data[0]['pin'], placeholder: '', row: 3, check: false },
-            { title: 'Mô tả', type: 'textarea', col: 12, class: 'description form-control ', id: 'description', value: (data.length==0)?'':data[0]['description'], placeholder: '', row: 3, check: false },
+            { title: 'Màu sắc', type: 'checkbox', col: 6, class: 'color form-control ', id: 'color', array: await this.color((data.length==0)?[]:data[0]['color']), value: '', placeholder: '', row: 3, check: false },
+            { title: 'Pin', type: 'checkbox', col: 6, class: 'pin form-control ', id: 'pin', array: await this.pin((data.length==0)?[]:data[0]['pin']), value: '', placeholder: '', row: 3, check: false },
+            { title: 'Mô tả', type: 'textarea', col: 12, class: 'description form-control ', id: 'description', value: (data.length==0)?'':data[0]['description'], placeholder: '', row: 2, check: false },
             { title: 'Nội Dung', type: 'ckeditor', col: 12, class: 'content form-control ', id: 'content', value: (data.length==0)?'':data[0]['content'], placeholder: '', row: 3, check: false },
             { title: 'Video', type: 'ckeditor', col: 12, class: 'video form-control ', id: 'video', value: (data.length==0)?'':data[0]['video'], placeholder: '', row: 3, check: false },
             { title: 'Hình Ảnh', type: 'ckeditor', col: 12, class: 'realImage form-control ', id: 'realImage', value: (data.length==0)?'':data[0]['realImage'], placeholder: '', row: 3, check: false },
             { title: 'Thông Số Kỹ Thuật', type: 'ckeditor', col: 12, class: 'specifications form-control ', id: 'specifications', value: (data.length==0)?'':data[0]['specifications'], placeholder: '', row: 3, check: false },
             { title: 'Meta Title', type: 'text', col: 6, class: 'metaTitle form-control ', id: 'metaTitle', value: (data.length==0)?'':data[0]['metaTitle'], placeholder: '', require: false, disabled: false, check: false, event: '' },
             { title: 'Canonical', type: 'text', col: 6, class: 'canonical form-control ', id: 'canonical', value: (data.length==0)?'':data[0]['canonical'], placeholder: '', require: false, disabled: false, check: false, event: '' },
-            { title: 'Meta Description', type: 'textarea', col: 12, class: 'metaDescription form-control ', id: 'metaDescription', value: (data.length==0)?'':data[0]['metaDescription'], placeholder: '', row: 3, check: false },
+            { title: 'Meta Description', type: 'textarea', col: 12, class: 'metaDescription form-control ', id: 'metaDescription', value: (data.length==0)?'':data[0]['metaDescription'], placeholder: '', row: 2, check: false },
         ]
     }
 

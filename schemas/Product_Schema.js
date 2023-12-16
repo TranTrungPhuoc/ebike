@@ -15,6 +15,9 @@ const schema = new mongoose.Schema({
 
     library: { type: String, default: '' },
 
+    color: { type: Array, default: [] },
+    pin: { type: Array, default: [] },
+
     price: { type: Number, default: 0 },
     linkRegister: { type: String, default: '' },
 

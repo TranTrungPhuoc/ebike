@@ -303,31 +303,6 @@ class Controllers {
     }
 
     async index(array = []) {
-
-        // const fs = require("fs");
-        // const { parse } = require("csv-parse");
-
-        // fs.createReadStream("file.csv")
-        //     .pipe(parse({ delimiter: ",", from_line: 2 }))
-        //     .on("data", async (row) => {
-                
-        //         const check = await Product_Models.getDetail({title: row[0]});
-                
-        //         if(check.length == 0){
-        //             const obj = {
-        //                 title: row[0],
-        //                     slug: this.titleChangeToSlug(row[0]),
-        //                 price: row[2]?parseInt(row[2]):0,
-        //                 avatar: row[3].split(',')[0],
-        //                 library: row[3],
-        //                 userID: new mongoose.Types.ObjectId('64dba0dda3949c4eb5d3dae3')
-        //             };
-
-        //             await Product_Models.create(obj);
-        //         }
-        //     })
-        // return
-
         await this.res.render('index', { aside: this.aside(), module: this.module, main: await this.main(array), user: this.req.cookies.user[0] })
     }
 
@@ -369,42 +344,31 @@ class Controllers {
                 typeHtml = Html.ckeditor(array[index]['row'], array[index]['value'], array[index]['class'], array[index]['id'], array[index]['placeholder']) + Html.p('mt-3', uploadFile)
             }
             else if (array[index]['type'] == 'checkbox') {
-                typeHtml = `
-                    <div class="form-control">
-                        <ul style="margin-bottom: 0;display: grid;column-gap: 20px;row-gap: 20px;grid-template-columns: auto auto auto auto;padding: 10px;list-style: none;">
-                            <li>
-                                <input type="checkbox" class="color" id="color" name="color" value="" placeholder="">
-                                <label>Xin chào</label>
-                            </li>
-                            <li>
-                                <input type="checkbox" class="color" id="color" name="color" value="" placeholder="">
-                                <label>Xin chào</label>
-                            </li>
-                            <li>
-                                <input type="checkbox" class="color" id="color" name="color" value="" placeholder="">
-                                <label>Xin chào</label>
-                            </li>
-                            <li>
-                                <input type="checkbox" class="color" id="color" name="color" value="" placeholder="">
-                                <label>Xin chào</label>
-                            </li>
-                            <li>
-                                <input type="checkbox" class="color" id="color" name="color" value="" placeholder="">
-                                <label>Xin chào</label>
-                            </li>
-                            <li>
-                                <input type="checkbox" class="color" id="color" name="color" value="" placeholder="">
-                                <label>Xin chào</label>
-                            </li>
-                        </ul>
-                    </div>
-                    
-                `;
+                typeHtml = '<div class="form-control">'+array[index]['array']+'</div>';
             }
             str += Html.div('col-md-' + array[index]['col'] + ((array[index]['type'] == 'hidden') ? ' d-none' : ''),
                 Html.div('form-group fill', Html.label(array[index]['title'], 'form-label') + typeHtml + Html.span('error error_' + array[index]['id'])))
         }
         if (id != undefined) { str += Html.input('hidden', '', 'idEdit', id) }
+        return str;
+    }
+
+    arrCheckbox(array=[], nameID='', oldArray=[]){
+        let str='<ul class="newAtributes" id="id'+nameID+'">';
+        for (let index = 0; index < array.length; index++) {
+            const element = array[index];
+            nameID=nameID.toLowerCase()
+            let checked = '';
+            if(oldArray.length > 0){
+                const found = oldArray.find((e) => e.toString() == element._id.toString());
+                if(found) checked = 'checked';
+            }
+            str+='<li>';
+                str+='<input type="checkbox" name="'+nameID+'" id="'+nameID+'_'+element._id+'" value="'+element._id+'" '+checked+'>';
+                str+=' <label for="'+nameID+'_'+element._id+'">'+element.title+'</label>';
+            str+='</li>';
+        }
+        str+='</ul>';
         return str;
     }
 
@@ -433,6 +397,15 @@ class Controllers {
         return data.length > 0 ? parseInt(data[0]['sort']) + 1 : 1;
     }
 
+    convertStrArrToObjArr(array){
+        const newArray = [];
+        for (let index = 0; index < array.length; index++) {
+            const element = array[index];
+            newArray.push(new mongoose.Types.ObjectId(element))
+        }
+        return newArray;
+    }
+
     async process() {
         const id = this.req.query['id']
         let error = [];
@@ -440,6 +413,12 @@ class Controllers {
         if (error.length == 0) {
             if (this.getValue['password'] != undefined) { this.req.body['password'] = bcrypt.hashSync(this.getValue['password'], salt); }
             if (this.req.body['parentID'] == '') { delete this.req.body['parentID']; }
+            if (this.req.body['color'] != undefined){ 
+                this.req.body['color'] = this.convertStrArrToObjArr(JSON.parse(this.req.body['color']))
+            }
+            if (this.req.body['pin'] != undefined){ 
+                this.req.body['pin'] = this.convertStrArrToObjArr(JSON.parse(this.req.body['pin']))
+            }
             if (id == 'undefined') {
                 this.req.body['sort'] = await this.sortNumber();
                 this.req.body['userID'] = this.req.cookies.user[0]['_id'];

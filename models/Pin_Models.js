@@ -7,6 +7,9 @@ class Pin_Models extends Models{
         super(table)
         this.table = Schema
     }
+    async m_getList(){
+        return this.table.find({status: true}).exec();
+    }
     async m_new(type){
         return await Category_Model.aggregate([
             {

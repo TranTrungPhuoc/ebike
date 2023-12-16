@@ -44,7 +44,7 @@ class Pin_Controllers extends Controllers{
 
     async formList(data){
         return [
-            { title: 'Tiêu Đề', type: 'text', col: 12, class: 'title form-control ', id: 'title', value: (data.length==0)?'':data[0]['title'], placeholder: '', require: false, disabled: false, check: true, event: '' },
+            { title: 'Tiêu Đề', type: 'text', col: 6, class: 'title form-control ', id: 'title', value: (data.length==0)?'':data[0]['title'], placeholder: '', require: false, disabled: false, check: true, event: '' },
         ]
     }
 

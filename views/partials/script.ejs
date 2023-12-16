@@ -92,13 +92,31 @@
             e.preventDefault()
             const array = $('form').serializeArray()
             const data = {}
-            for (let index = 0; index < array.length; index++) {
-                data[array[index].name] = array[index].value
-            }
             const module = '<%-module%>';
-            if(module == 'post' || module == 'category'){
+            for (let index = 0; index < array.length; index++) {
+                data[array[index].name] = array[index].value;
+            }
+            if(module == 'post' || module == 'category' || module == 'product'){
                 data['content'] = CKEDITOR.instances['content'].getData();
             }
+            if(module == 'product'){
+                data['video'] = CKEDITOR.instances['video'].getData();
+                data['realImage'] = CKEDITOR.instances['realImage'].getData();
+                data['specifications'] = CKEDITOR.instances['specifications'].getData();
+
+                var valColor = [];
+                $('#idColor input:checkbox:checked').each(function(i){
+                    valColor[i] = $(this).val();
+                });
+                data['color'] = JSON.stringify(valColor);
+
+                var valPin = [];
+                $('#idPin input:checkbox:checked').each(function(i){
+                    valPin[i] = $(this).val();
+                });
+                data['pin']= JSON.stringify(valPin);
+            }
+
             const id=$('#idEdit').val()
             $.ajax({
                 url: '/admin/<%-module%>/process?id='+id,

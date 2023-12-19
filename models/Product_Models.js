@@ -12,36 +12,31 @@ class Product_Models extends Models{
         return data;
     }
     async getRelative(slug){
-        const Product = await this.table.find({slug}).exec();
-        if(Product.length > 0){
-            return await Category_Model.aggregate([
-                {$match: {_id: Product[0].parentID} },
-                {$sort: {created: -1}},
-                {
-                    $lookup: {
-                        from: 'Products',
-                        localField: '_id',
-                        foreignField: 'parentID',
-                        pipeline: [
-                            {$match: {slug: {$ne: slug}}},
-                            {$sort: {created: -1}},
-                            {$limit: 7},
-                            {$project: { title: true, slug: true, avatar: true, description: true, created: true }}
-                        ],
-                        as: 'Products'
-                    }
-                },
-                {
-                    $project:{
-                        title: true,
-                        slug: true,
-                        Products: true
-                    }
+        const Product = await this.table.find({slug}).select('parentID').exec();
+        return await Category_Model.aggregate([
+            {$match: {_id: Product[0].parentID} },
+            {
+                $lookup: {
+                    from: 'products',
+                    localField: '_id',
+                    foreignField: 'parentID',
+                    pipeline: [
+                        {$match: {slug: {$ne: slug}}},
+                        {$sort: {created: -1}},
+                        {$limit: 8},
+                        {$project: { title: true, slug: true, avatar: true, price: true, description: true, created: true }}
+                    ],
+                    as: 'Products'
                 }
-            ]).exec()
-        }else{
-            return []
-        }
+            },
+            {
+                $project:{
+                    title: true,
+                    slug: true,
+                    Products: true
+                }
+            }
+        ]).exec()
     }
     async viewMore(limit){
         return await this.table.aggregate([
@@ -105,6 +100,30 @@ class Product_Models extends Models{
                         {$project: { title: true, slug: true, categoryParent: true }}
                     ],
                     as: 'category'
+                }
+            },
+            {
+                $lookup: {
+                    from: 'colors',
+                    localField: 'color',
+                    foreignField: '_id',
+                    pipeline: [
+                        { $match: {status: true} },
+                        { $project: { title: true } }
+                    ],
+                    as: 'color'
+                }
+            },
+            {
+                $lookup: {
+                    from: 'pins',
+                    localField: 'pin',
+                    foreignField: '_id',
+                    pipeline: [
+                        { $match: {status: true} },
+                        { $project: { title: true } }
+                    ],
+                    as: 'pin'
                 }
             },
             {

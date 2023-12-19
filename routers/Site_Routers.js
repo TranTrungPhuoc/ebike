@@ -2,7 +2,7 @@ const express = require('express')
 const router = express.Router()
 
 const Controllers = require('../controllers/Site_Controllers')
-router.get('/edit/:id', (req, res) => new Controllers(req, res).form())
+router.get('/edit/:id', (req, res) => {new Controllers(req, res).form()})
 router.post('/process', (req, res) => new Controllers(req, res).process())
 
 const Api = require('../api/Site_Api')

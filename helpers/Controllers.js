@@ -233,12 +233,85 @@ class Controllers {
         return Html.div('row', await this.arrayDashboard());
     }
 
+    async contentSite(){
+        const data = await this.model.getList()
+        const saveHTML = Html.submit('btn btn-outline-primary has-ripple', 'Lưu')
+        let array = Html.h4('Cấu hình Chung') + '<hr />';
+        array += Html.div('col-md-4', Html.div('form-group', Html.label('Tên Công Ty', 'form-label') + Html.input('text', 'form-control', 'nameCompany', data[0]['nameCompany'])));
+        array += Html.div('col-md-4', Html.div('form-group', Html.label('Hotline', 'form-label') + Html.input('text', 'form-control', 'hotlineCompany', data[0]['hotlineCompany'])));
+        array += Html.div('col-md-4', Html.div('form-group', Html.label('CSKH', 'form-label') + Html.input('text', 'form-control', 'cskhCompany', data[0]['cskhCompany'])));
+        array += Html.div('col-md-4', Html.div('form-group', Html.label('Email', 'form-label') + Html.input('text', 'form-control', 'emailCompany', data[0]['emailCompany'])));
+
+        array += Html.div('col-md-4', Html.div('form-group', Html.label('Slogan', 'form-label') + Html.input('text', 'form-control', 'slogan', data[0]['slogan'])));
+        array += Html.div('col-md-4', Html.div('form-group', Html.label('Text bảo hành', 'form-label') + Html.input('text', 'form-control', 'textGuarantee', data[0]['textGuarantee'])));
+
+        array += Html.div('col-md-12', Html.div('form-group', Html.label('Địa chỉ', 'form-label') + Html.input('text', 'form-control', 'addressCompany', data[0]['addressCompany'])));
+        
+        array += Html.p('mt-2', '<mark class="p-2 rounded-3 fw-bold">Button Xem Thêm</mark>')
+        array += Html.div('col-md-4', Html.div('form-group', Html.label('Tên', 'form-label') + Html.input('text', 'form-control', 'btnMoreText', data[0]['btnMoreText'])));
+        array += Html.div('col-md-4', Html.div('form-group', Html.label('Link', 'form-label') + Html.input('text', 'form-control', 'btnMoreLink', data[0]['btnMoreLink'])));
+
+        array += Html.p('mt-2', '<mark class="p-2 rounded-3 fw-bold">Button Hệ Thống Cửa Hàng</mark>')
+        array += Html.div('col-md-4', Html.div('form-group', Html.label('Tên', 'form-label') + Html.input('text', 'form-control', 'btnStoreText', data[0]['btnStoreText'])));
+        array += Html.div('col-md-4', Html.div('form-group', Html.label('Link', 'form-label') + Html.input('text', 'form-control', 'btnStoreLink', data[0]['btnStoreLink'])));
+
+        array += Html.h4('Cấu hình Header', 'mt-4') + '<hr />';
+
+        // cột 1
+        array += Html.p('mt-2', '<mark class="p-2 rounded-3 fw-bold">Column One</mark>')
+        array += Html.div('col-md-4', Html.div('form-group', Html.label('Class Icon', 'form-label') + Html.input('text', 'form-control', 'iconAddressHeader', data[0]['iconAddressHeader'])));
+        array += Html.div('col-md-4', Html.div('form-group', Html.label('Tiêu Đề', 'form-label') + Html.input('text', 'form-control', 'titleAddressHeader', data[0]['titleAddressHeader'])));
+        array += Html.div('col-md-4', Html.div('form-group', Html.label('Link', 'form-label') + Html.input('text', 'form-control', 'linkAddressHeader', data[0]['linkAddressHeader'])));
+
+        // cột 2
+        array += Html.p('mt-2', '<mark class="p-2 rounded-3 fw-bold">Column Two</mark>')
+        array += Html.div('col-md-4', Html.div('form-group', Html.label('Class Icon', 'form-label') + Html.input('text', 'form-control', 'iconPurchaseHeader', data[0]['iconPurchaseHeader'])));
+        array += Html.div('col-md-4', Html.div('form-group', Html.label('Tiêu Đề', 'form-label') + Html.input('text', 'form-control', 'titlePurchaseHeader', data[0]['titlePurchaseHeader'])));
+        array += Html.div('col-md-4', Html.div('form-group', Html.label('Link', 'form-label') + Html.input('text', 'form-control', 'linkPurchaseHeader', data[0]['linkPurchaseHeader'])));
+
+        // cột 3
+        array += Html.p('mt-2', '<mark class="p-2 rounded-3 fw-bold">Column Three</mark>')
+        array += Html.div('col-md-4', Html.div('form-group', Html.label('Class Icon', 'form-label') + Html.input('text', 'form-control', 'iconPhoneHeader', data[0]['iconPhoneHeader'])));
+        array += Html.div('col-md-4', Html.div('form-group', Html.label('Tiêu Đề', 'form-label') + Html.input('text', 'form-control', 'titlePhoneHeader', data[0]['titlePhoneHeader'])));
+        array += Html.div('col-md-4', Html.div('form-group', Html.label('Link', 'form-label') + Html.input('text', 'form-control', 'linkPhoneHeader', data[0]['linkPhoneHeader'])));
+
+        // cột 4
+        array += Html.p('mt-2', '<mark class="p-2 rounded-3 fw-bold">Column One</mark>')
+        array += Html.div('col-md-4', Html.div('form-group', Html.label('Class Icon', 'form-label') + Html.input('text', 'form-control', 'iconFreeshipHeader', data[0]['iconFreeshipHeader'])));
+        array += Html.div('col-md-4', Html.div('form-group', Html.label('Tiêu Đề', 'form-label') + Html.input('text', 'form-control', 'titleFreeshipHeader', data[0]['titleFreeshipHeader'])));
+        array += Html.div('col-md-4', Html.div('form-group', Html.label('Link', 'form-label') + Html.input('text', 'form-control', 'linkFreeshipHeader', data[0]['linkFreeshipHeader'])));
+
+        // cột 5
+        array += Html.p('mt-2', '<mark class="p-2 rounded-3 fw-bold">Column One</mark>')
+        array += Html.div('col-md-4', Html.div('form-group', Html.label('Class Icon', 'form-label') + Html.input('text', 'form-control', 'iconGuaranteeHeader', data[0]['iconGuaranteeHeader'])));
+        array += Html.div('col-md-4', Html.div('form-group', Html.label('Tiêu Đề', 'form-label') + Html.input('text', 'form-control', 'titleGuaranteeHeader', data[0]['titleGuaranteeHeader'])));
+        array += Html.div('col-md-4', Html.div('form-group', Html.label('Link', 'form-label') + Html.input('text', 'form-control', 'linkGuaranteeHeader', data[0]['linkGuaranteeHeader'])));
+
+        array += Html.h4('Cấu hình Gửi Email', 'mt-4') + '<hr />';
+        array += Html.div('col-md-6', Html.div('form-group', Html.label('Host', 'form-label') + Html.input('text', 'form-control', 'hostMail', data[0]['hostMail'])));
+        array += Html.div('col-md-6', Html.div('form-group', Html.label('Port', 'form-label') + Html.input('text', 'form-control', 'portMail', data[0]['portMail'])));
+        array += Html.div('col-md-6', Html.div('form-group', Html.label('Username', 'form-label') + Html.input('text', 'form-control', 'usernameMail', data[0]['usernameMail'])));
+        array += Html.div('col-md-6', Html.div('form-group', Html.label('Password', 'form-label') + Html.input('password', 'form-control', 'passwordMail', data[0]['passwordMail'])));
+
+        array += Html.h4('Cấu hình SEO', 'mt-4') + '<hr />';
+        array += Html.div('col-md-6', Html.div('form-group', Html.label('Meta Title', 'form-label') + Html.input('text', 'form-control', 'titleSEO', data[0]['titleSEO'])));
+        array += Html.div('col-md-6', Html.div('form-group', Html.label('Canonical', 'form-label') + Html.input('text', 'form-control', 'canonicalSEO', data[0]['canonicalSEO'])));
+        array += Html.div('col-md-12', Html.div('form-group', Html.label('Meta Description', 'form-label') + Html.input('text', 'form-control', 'descriptionSEO', data[0]['descriptionSEO'])));
+
+        const id = this.req.params['id']
+
+        array += Html.input('hidden', '', 'idEdit', id)
+
+        const main = Html.div('card-body', Html.div('card-body', Html.form(Html.div('row', array) + Html.div('save', Html.div('mt-3', saveHTML)) + Html.div('loading', '<br/>' + Html.spiner()))))
+        return Html.div('row', Html.div('col-xl-12', Html.div('card', main)))
+    }
+
     async main(array = []) {
         let content = await this.content(array)
         if (this.req.originalUrl.includes('dashboard')) {
             content = await this.dashboard(array)
         }
-        return Html.section('pcoded-main-container', Html.div('pcoded-content', this.breadcrumb() + content));
+        return Html.section('pcoded-main-container', Html.div('pcoded-content', this.breadcrumb() + (this.params(2)!='site'?content:await this.contentSite())));
     }
 
     aside() {
@@ -410,6 +483,7 @@ class Controllers {
         const id = this.req.query['id']
         let error = [];
         error = await this.checkForm(id)
+
         if (error.length == 0) {
             if (this.getValue['password'] != undefined) { this.req.body['password'] = bcrypt.hashSync(this.getValue['password'], salt); }
             if (this.req.body['parentID'] == '') { delete this.req.body['parentID']; }

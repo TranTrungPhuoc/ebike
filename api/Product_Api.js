@@ -32,7 +32,7 @@ class Product_Api extends Api {
             const element = data[index];
             for (let j = 0; j < element['Products'].length; j++) {
                 const element2 = element['Products'][j];
-                element2['avatar'] = element2['avatar'] != '' ? this.req.protocol + '://' + this.req.headers.host + '/uploads/Product/' + element2['avatar'] : '';
+                // element2['avatar'] = element2['avatar'] != '' ? this.req.protocol + '://' + this.req.headers.host + '/uploads/Product/' + element2['avatar'] : '';
             }
         }
 
@@ -108,16 +108,16 @@ class Product_Api extends Api {
     async detail() {
         const { slug } = this.req.query
         
-        // if (slug == undefined || slug.trim() == '') {
-        //     res.send({
-        //         code: 600,
-        //         message: "Success",
-        //         response: {
-        //             error: "Slug không được rỗng."
-        //         }
-        //     })
-        //     return
-        // }
+        if (slug == undefined || slug.trim() == '') {
+            res.send({
+                code: 600,
+                message: "Success",
+                response: {
+                    error: "Slug không được rỗng."
+                }
+            })
+            return
+        }
 
         const data = await Product_Models.m_detail(slug)
 

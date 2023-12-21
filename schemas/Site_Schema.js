@@ -6,6 +6,7 @@ const schema = new mongoose.Schema({
     cskhCompany: { type: String, default: '' },
     emailCompany: { type: String, default: '' },
     addressCompany: { type: String, default: '' },
+    mstCompany: { type: String, default: '' },
 
     slogan: { type: String, default: '' },
     textGuarantee: { type: String, default: '' },
@@ -29,6 +30,10 @@ const schema = new mongoose.Schema({
     linkPhoneHeader: { type: String, default: '' },
 
     iconFreeshipHeader: { type: String, default: '' },
+    titleFreeshipHeader: { type: String, default: '' },
+    linkFreeshipHeader: { type: String, default: '' },
+
+    iconGuaranteeHeader: { type: String, default: '' },
     titleGuaranteeHeader: { type: String, default: '' },
     linkGuaranteeHeader: { type: String, default: '' },
 

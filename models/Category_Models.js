@@ -1,6 +1,8 @@
+const { default: mongoose } = require('mongoose')
 const Models = require('../helpers/Models')
 const Schema = require('../schemas/Category_Schema')
 const Post_Schema = require('../schemas/Post_Schema')
+const Product_Schema = require('../schemas/Product_Schema')
 class Category_Models extends Models{
     constructor(table){
         super(table)
@@ -14,6 +16,18 @@ class Category_Models extends Models{
     async m_menuCategory(){
         return await this.table.find({status: true}).select('title slug type parentID').exec();
     }
+
+    // async m_getID(slug){
+    //     const father = await this.table.find(slug).select('_id').exec();
+
+    //     const childOne = await this.table.find({
+    //         parentID: father[0]['_id']
+    //     }).select('_id').exec();
+
+    //     console.log(childOne);
+
+    //     return 0;
+    // }
 
     async getListType(type){
         return await this.table.find({type}).select('title parentID').exec();
@@ -109,30 +123,53 @@ class Category_Models extends Models{
         ])
     }
 
-    async getItemsDetail(slug, page, limit){
-        return await this.table.aggregate([
-            { $match: {slug} },
-            {
-                $lookup:
-                {
-                    from: 'products',
-                    localField: '_id',
-                    foreignField: 'parentID',
-                    pipeline: [
-                        {$sort: {created: -1}},
-                        {$skip: page!=0?(page+limit):0},
-                        {$limit: limit},
-                        {$project: { title: true, slug: true, avatar: true, description: true, price: true, created: true }}
-                    ],
-                    as: 'Products'
+    async getIDs(slug){
+        const father = await this.table.find({slug}).select('_id').exec();
+
+        const arrayID = [father[0]['_id']];
+        const childOne = await this.table.find({
+            parentID: father[0]['_id']
+        }).select('_id').exec();
+
+        if(childOne.length > 0){
+            const arrayIDChildOne = []
+            for (let index = 0; index < childOne.length; index++) {
+                const element = childOne[index];
+                arrayIDChildOne.push(element._id)
+            }
+            arrayID.push(...arrayIDChildOne)
+
+            const childTwo = await this.table.find({
+                parentID: {$in: arrayIDChildOne}
+            }).select('_id').exec();
+
+            if(childTwo.length > 0){
+                const arrayIDChildTwo = []
+                for (let index = 0; index < childTwo.length; index++) {
+                    const element = childTwo[index];
+                    arrayIDChildTwo.push(element._id)
                 }
-            },
-            {$project: { title: true, slug: true, type: true, content: true, Products: true }}
-        ])
+                arrayID.push(...arrayIDChildTwo)
+            }
+        }
+
+        return arrayID;
     }
 
-    async getTotalItemsDetail(parentID){
-        return await Post_Schema.countDocuments({parentID}).exec();
+    async getItemsDetail(slug, page, limit){
+        const arrayID = await this.getIDs(slug)
+        const category = await this.table.find({slug}).select('title slug type content').exec();
+        const skip = page>1?((page-1)*limit):1
+        const select = 'title slug avatar description price created'
+        const products = await Product_Schema.find({parentID: {$in: arrayID} }).sort({created: -1}).skip(skip).limit(limit).select(select).exec();
+        return {category: category[0], products}
+    }
+
+    async getTotalItemsDetail(slug){
+        const arrayID = await this.getIDs(slug);
+        return await Product_Schema.countDocuments({
+            parentID: {$in: arrayID}
+        }).exec();
     }
 
     async getViewMore(slug){

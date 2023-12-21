@@ -5,6 +5,14 @@ class Pin_Api extends Api {
     constructor(req, res) {
         super(req, res)
     }
+    async getList(){
+        const data = await Pin_Models.m_getList()
+        this.res.send({
+            code: 200,
+            message: "Success",
+            response: data
+        })
+    }
     async new(){
         const { type } = this.req.query
         if (type == undefined || type.trim() == '') {

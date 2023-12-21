@@ -17,5 +17,6 @@ router.get('/getDetailSlug/:slug', (req, res) => new Api(req, res).getDetailSlug
 router.get('/view/:id', (req, res) => new Api(req, res).view())
 router.get('/search', (req, res) => new Api(req, res).search())
 router.get('/new', (req, res) => new Api(req, res).new())
+router.get('/getList', (req, res) => new Api(req, res).getList())
 
 module.exports=router

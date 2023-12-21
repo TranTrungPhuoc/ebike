@@ -245,7 +245,8 @@ class Controllers {
         array += Html.div('col-md-4', Html.div('form-group', Html.label('Slogan', 'form-label') + Html.input('text', 'form-control', 'slogan', data[0]['slogan'])));
         array += Html.div('col-md-4', Html.div('form-group', Html.label('Text bảo hành', 'form-label') + Html.input('text', 'form-control', 'textGuarantee', data[0]['textGuarantee'])));
 
-        array += Html.div('col-md-12', Html.div('form-group', Html.label('Địa chỉ', 'form-label') + Html.input('text', 'form-control', 'addressCompany', data[0]['addressCompany'])));
+        array += Html.div('col-md-6', Html.div('form-group', Html.label('ĐKKD/MST', 'form-label') + Html.input('text', 'form-control', 'mstCompany', data[0]['mstCompany'])));
+        array += Html.div('col-md-6', Html.div('form-group', Html.label('Địa chỉ', 'form-label') + Html.input('text', 'form-control', 'addressCompany', data[0]['addressCompany'])));
         
         array += Html.p('mt-2', '<mark class="p-2 rounded-3 fw-bold">Button Xem Thêm</mark>')
         array += Html.div('col-md-4', Html.div('form-group', Html.label('Tên', 'form-label') + Html.input('text', 'form-control', 'btnMoreText', data[0]['btnMoreText'])));
@@ -276,13 +277,13 @@ class Controllers {
         array += Html.div('col-md-4', Html.div('form-group', Html.label('Link', 'form-label') + Html.input('text', 'form-control', 'linkPhoneHeader', data[0]['linkPhoneHeader'])));
 
         // cột 4
-        array += Html.p('mt-2', '<mark class="p-2 rounded-3 fw-bold">Column One</mark>')
+        array += Html.p('mt-2', '<mark class="p-2 rounded-3 fw-bold">Column Four</mark>')
         array += Html.div('col-md-4', Html.div('form-group', Html.label('Class Icon', 'form-label') + Html.input('text', 'form-control', 'iconFreeshipHeader', data[0]['iconFreeshipHeader'])));
         array += Html.div('col-md-4', Html.div('form-group', Html.label('Tiêu Đề', 'form-label') + Html.input('text', 'form-control', 'titleFreeshipHeader', data[0]['titleFreeshipHeader'])));
         array += Html.div('col-md-4', Html.div('form-group', Html.label('Link', 'form-label') + Html.input('text', 'form-control', 'linkFreeshipHeader', data[0]['linkFreeshipHeader'])));
 
         // cột 5
-        array += Html.p('mt-2', '<mark class="p-2 rounded-3 fw-bold">Column One</mark>')
+        array += Html.p('mt-2', '<mark class="p-2 rounded-3 fw-bold">Column Five</mark>')
         array += Html.div('col-md-4', Html.div('form-group', Html.label('Class Icon', 'form-label') + Html.input('text', 'form-control', 'iconGuaranteeHeader', data[0]['iconGuaranteeHeader'])));
         array += Html.div('col-md-4', Html.div('form-group', Html.label('Tiêu Đề', 'form-label') + Html.input('text', 'form-control', 'titleGuaranteeHeader', data[0]['titleGuaranteeHeader'])));
         array += Html.div('col-md-4', Html.div('form-group', Html.label('Link', 'form-label') + Html.input('text', 'form-control', 'linkGuaranteeHeader', data[0]['linkGuaranteeHeader'])));

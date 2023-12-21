@@ -88,24 +88,32 @@ class Category_Api extends Api{
     async getItemsDetail(){
         const { slug } = this.req.params
         const { page, limit } = this.req.query
-        const pageDefault = parseInt(page?(page==1?0:page):0)
+        const pageDefault = parseInt(page?(page==1?1:page):1)
         const limitDefault = parseInt(limit??12)
-        const data = await Category_Models.getItemsDetail(slug, pageDefault, limitDefault);
-        let count = 0;
-        if(data.length>0){
-            for (let index = 0; index < data.length; index++) {
-                const element = data[index];
-                for (let j = 0; j < element['Products'].length; j++) {
-                    const element2 = element['Products'][j];
-                    // element2['avatar'] = element2['avatar']!=''?this.req.protocol + '://' + this.req.headers.host + '/uploads/product/' + element2['avatar']:'';
-                }
-            }
-            count = await Category_Models.getTotalItemsDetail(data[0]._id)
-        }
+        const {category, products} = await Category_Models.getItemsDetail(slug, pageDefault, limitDefault);
+        let count = await Category_Models.getTotalItemsDetail(slug);
+
+        let data = {}
+        data['title'] = category.title
+        data['slug'] = category.slug
+        data['content'] = category.content
+        data['type'] = category.type
+        data['Products'] = products
+
+        // if(data['Products'].length>0){
+        //     for (let index = 0; index < data['Products'].length; index++) {
+        //         const element = data['Products'][index];
+        //         for (let j = 0; j < element['Products'].length; j++) {
+        //             const element2 = element['Products'][j];
+        //             // element2['avatar'] = element2['avatar']!=''?this.req.protocol + '://' + this.req.headers.host + '/uploads/product/' + element2['avatar']:'';
+        //         }
+        //     }
+        // }
+
         return this.res.send({
             code: 200,
             message: "Success",
-            response: { total: count, page: pageDefault, limit: limitDefault, listData:data}
+            response: { total: count, page: pageDefault, limit: limitDefault, listData: data}
         })
     }
 

@@ -152,21 +152,28 @@ class Post_Api extends Api {
 
         data[0]['user'] = data[0]['user'][0];
 
-        const newCategory = [];
+        const bredcrumbs = [];
 
         if(data[0]['category'][0].categoryParent){
-            newCategory.push({
+            bredcrumbs.push({
                 title: data[0]['category'][0].categoryParent[0].title,
-                slug: data[0]['category'][0].categoryParent[0].slug
+                slug: 'blog/'+data[0]['category'][0].categoryParent[0].slug
             })
         }
 
-        newCategory.push({
+        bredcrumbs.push({
             title: data[0]['category'][0].title,
-            slug: data[0]['category'][0].slug
+            slug: 'blog/'+data[0]['category'][0].slug
         });
 
-        data[0]['category'] = newCategory
+        bredcrumbs.push({
+            title: data[0].title,
+            slug: data[0].slug
+        });
+
+        data[0]['bredcrumbs'] = bredcrumbs
+
+        delete data[0]['category'];
 
         this.res.send({
             code: 200,

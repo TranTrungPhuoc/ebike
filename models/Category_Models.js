@@ -124,9 +124,22 @@ class Category_Models extends Models{
     }
 
     async getIDs(slug){
-        const father = await this.table.find({slug}).select('_id').exec();
+        const father = await this.table.find({slug}).select('title slug parentID').exec();
+
+        let bredcrumbs = [];
+        if(father[0]['parentID']){
+            const fatherOne = await this.table.find({_id: father[0]['parentID']}).select('title slug parentID').exec();
+            if(fatherOne[0]['parentID']){
+                const fatherTwo = await this.table.find({_id: fatherOne[0]['parentID']}).select('title slug parentID').exec();
+                bredcrumbs.push({title: fatherTwo[0]['title'], slug: fatherTwo[0]['slug']})
+            }   
+            bredcrumbs.push({title: fatherOne[0]['title'], slug: fatherOne[0]['slug']});
+        }
+
+        bredcrumbs.push({title: father[0]['title'], slug: father[0]['slug']});
 
         const arrayID = [father[0]['_id']];
+
         const childOne = await this.table.find({
             parentID: father[0]['_id']
         }).select('_id').exec();
@@ -153,22 +166,38 @@ class Category_Models extends Models{
             }
         }
 
-        return arrayID;
+        return {arrayID, bredcrumbs};
     }
 
-    async getItemsDetail(slug, page, limit){
-        const arrayID = await this.getIDs(slug)
+    async getItemsDetailPost(slug, page, limit){
+        const _getIDs = await this.getIDs(slug)
         const category = await this.table.find({slug}).select('title slug type content').exec();
         const skip = page>1?((page-1)*limit):1
         const select = 'title slug avatar description price created'
-        const products = await Product_Schema.find({parentID: {$in: arrayID} }).sort({created: -1}).skip(skip).limit(limit).select(select).exec();
-        return {category: category[0], products}
+        const posts = await Post_Schema.find({parentID: {$in: _getIDs.arrayID} }).sort({created: -1}).skip(skip).limit(limit).select(select).exec();
+        return {category: category[0], posts, bredcrumbs: _getIDs.bredcrumbs}
+    }
+
+    async getTotalItemsDetailPost(slug){
+        const _getIDs = await this.getIDs(slug);
+        return await Post_Schema.countDocuments({
+            parentID: {$in: _getIDs.arrayID}
+        }).exec();
+    }
+
+    async getItemsDetail(slug, page, limit){
+        const _getIDs = await this.getIDs(slug)
+        const category = await this.table.find({slug}).select('title slug type content').exec();
+        const skip = page>1?((page-1)*limit):1
+        const select = 'title slug avatar description price created'
+        const products = await Product_Schema.find({parentID: {$in: _getIDs.arrayID} }).sort({created: -1}).skip(skip).limit(limit).select(select).exec();
+        return {category: category[0], products, bredcrumbs: _getIDs.bredcrumbs}
     }
 
     async getTotalItemsDetail(slug){
-        const arrayID = await this.getIDs(slug);
+        const _getIDs = await this.getIDs(slug);
         return await Product_Schema.countDocuments({
-            parentID: {$in: arrayID}
+            parentID: {$in: _getIDs.arrayID}
         }).exec();
     }
 

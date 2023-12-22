@@ -128,16 +128,13 @@ class Post_Api extends Api {
             })
             return
         }
-        const data = await Post_Models.getDetailSlug(slug.trim())
+        const data = await Post_Models.getDetailSlug(slug)
 
-        this.res.send({data})
-        return
+        // data[0]['avatar'] = data[0]['avatar'] != '' ? this.req.protocol + '://' + this.req.headers.host + '/uploads/post/' + data[0]['avatar'] : '';
 
-        data[0]['avatar'] = data[0]['avatar'] != '' ? this.req.protocol + '://' + this.req.headers.host + '/uploads/post/' + data[0]['avatar'] : '';
-
-        if(data[0]['user'].length > 0){
-            data[0]['user'][0]['avatar'] = data[0]['user'][0]['avatar'] != '' ? this.req.protocol + '://' + this.req.headers.host + '/uploads/user/' + data[0]['user'][0]['avatar'] : '';
-        }
+        // if(data[0]['user'].length > 0){
+        //     data[0]['user'][0]['avatar'] = data[0]['user'][0]['avatar'] != '' ? this.req.protocol + '://' + this.req.headers.host + '/uploads/user/' + data[0]['user'][0]['avatar'] : '';
+        // }
 
         const $ = cheerio.load(data[0]['content']);
         let index = '';
@@ -155,10 +152,26 @@ class Post_Api extends Api {
 
         data[0]['user'] = data[0]['user'][0];
 
+        const newCategory = [];
+
+        if(data[0]['category'][0].categoryParent){
+            newCategory.push({
+                title: data[0]['category'][0].categoryParent[0].title,
+                slug: data[0]['category'][0].categoryParent[0].slug
+            })
+        }
+
+        newCategory.push({
+            title: data[0]['category'][0].title,
+            slug: data[0]['category'][0].slug
+        });
+
+        data[0]['category'] = newCategory
+
         this.res.send({
             code: 200,
             message: "Success",
-            response: data[0]
+            response: data
         })
     }
     async view() {

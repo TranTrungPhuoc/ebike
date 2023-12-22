@@ -90,7 +90,7 @@ class Category_Api extends Api{
         const { page, limit } = this.req.query
         const pageDefault = parseInt(page?(page==1?1:page):1)
         const limitDefault = parseInt(limit??12)
-        const {category, products} = await Category_Models.getItemsDetail(slug, pageDefault, limitDefault);
+        const {category, products, bredcrumbs} = await Category_Models.getItemsDetail(slug, pageDefault, limitDefault);
         let count = await Category_Models.getTotalItemsDetail(slug);
 
         let data = {}
@@ -98,6 +98,7 @@ class Category_Api extends Api{
         data['slug'] = category.slug
         data['content'] = category.content
         data['type'] = category.type
+        data['bredcrumbs'] = bredcrumbs
         data['Products'] = products
 
         // if(data['Products'].length>0){
@@ -109,6 +110,36 @@ class Category_Api extends Api{
         //         }
         //     }
         // }
+
+        return this.res.send({
+            code: 200,
+            message: "Success",
+            response: { total: count, page: pageDefault, limit: limitDefault, listData: data}
+        })
+    }
+
+    async getItemsDetailPost(){
+        const { slug } = this.req.params
+        const { page, limit } = this.req.query
+        const pageDefault = parseInt(page?(page==1?1:page):1)
+        const limitDefault = parseInt(limit??12)
+        const {category, posts, bredcrumbs} = await Category_Models.getItemsDetailPost(slug, pageDefault, limitDefault);
+        let count = await Category_Models.getTotalItemsDetailPost(slug);
+
+        let data = {}
+        data['title'] = category.title
+        data['slug'] = category.slug
+        data['content'] = category.content
+        data['type'] = category.type
+        data['bredcrumbs'] = bredcrumbs
+        data['Posts'] = posts
+
+        if(data['Posts'].length>0){
+            for (let index = 0; index < data['Posts'].length; index++) {
+                const element = data['Posts'][index];
+                element['avatar'] = element['avatar']!=''?this.req.protocol + '://' + this.req.headers.host + '/uploads/post/' + element['avatar']:'';
+            }
+        }
 
         return this.res.send({
             code: 200,

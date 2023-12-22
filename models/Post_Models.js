@@ -150,9 +150,15 @@ class Post_Models extends Models{
             },
             {
                 $project:{
-                    parentID: false,
-                    userID: false,
-                    __v: false
+                    title: true,
+                    slug: true,
+                    description: true,
+                    content: true,
+                    metaTitle: true,
+                    metaDescription: true,
+                    created: true,
+                    category: true,
+                    user: true,
                 }
             }
         ]).exec()

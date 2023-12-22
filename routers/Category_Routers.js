@@ -57,6 +57,7 @@ router.get('/getItemsNews', (req, res) => new Api(req, res).getItemsNews())
 router.get('/getItemsHome', (req, res) => new Api(req, res).getItemsHome())
 router.get('/getItemsRelative/:slug', (req, res) => new Api(req, res).getItemsRelative())
 router.get('/getItemsDetail/:slug', (req, res) => new Api(req, res).getItemsDetail())
+router.get('/getItemsDetailPost/:slug', (req, res) => new Api(req, res).getItemsDetailPost())
 router.get('/getViewMore/:slug', (req, res) => new Api(req, res).getViewMore())
 router.get('/getItemsHomeDetail/:slug', (req, res) => new Api(req, res).getItemsHomeDetail())
 

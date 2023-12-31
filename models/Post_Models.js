@@ -127,12 +127,12 @@ class Post_Models extends Models{
                                 localField: 'parentID',
                                 foreignField: '_id',
                                 pipeline: [
-                                    {$project: { title: true, slug: true }}
+                                    {$project: { title: true, slug: true, type: true }}
                                 ],
                                 as: 'categoryParent'
                             }
                         },
-                        {$project: { title: true, slug: true, categoryParent: true }}
+                        {$project: { title: true, slug: true, type: true, categoryParent: true }}
                     ],
                     as: 'category'
                 }

@@ -94,12 +94,15 @@ class Category_Api extends Api{
         let count = await Category_Models.getTotalItemsDetail(slug);
 
         let data = {}
-        data['title'] = category.title
-        data['slug'] = category.slug
-        data['content'] = category.content
-        data['type'] = category.type
-        data['bredcrumbs'] = bredcrumbs
-        data['Products'] = products
+
+        if(category){
+            data['title'] = category.title
+            data['slug'] = category.slug
+            data['content'] = category.content
+            data['type'] = category.type
+            data['bredcrumbs'] = bredcrumbs
+            data['Products'] = products
+        }
 
         // if(data['Products'].length>0){
         //     for (let index = 0; index < data['Products'].length; index++) {
@@ -127,17 +130,21 @@ class Category_Api extends Api{
         let count = await Category_Models.getTotalItemsDetailPost(slug);
 
         let data = {}
-        data['title'] = category.title
-        data['slug'] = category.slug
-        data['content'] = category.content
-        data['type'] = category.type
-        data['bredcrumbs'] = bredcrumbs
-        data['Posts'] = posts
 
-        if(data['Posts'].length>0){
-            for (let index = 0; index < data['Posts'].length; index++) {
-                const element = data['Posts'][index];
-                element['avatar'] = element['avatar']!=''?this.req.protocol + '://' + this.req.headers.host + '/uploads/post/' + element['avatar']:'';
+        if(category){
+
+            data['title'] = category.title
+            data['slug'] = category.slug
+            data['content'] = category.content
+            data['type'] = category.type
+            data['bredcrumbs'] = bredcrumbs
+            data['Posts'] = posts
+
+            if(data['Posts'].length>0){
+                for (let index = 0; index < data['Posts'].length; index++) {
+                    const element = data['Posts'][index];
+                    element['avatar'] = element['avatar']!=''?this.req.protocol + '://' + this.req.headers.host + '/uploads/post/' + element['avatar']:'';
+                }
             }
         }
 
@@ -157,6 +164,20 @@ class Category_Api extends Api{
                 const element2 = element['Posts'][j];
                 element2['avatar'] = element2['avatar']!=''?this.req.protocol + '://' + this.req.headers.host + '/uploads/post/' + element2['avatar']:'';
             }
+        }
+        return this.res.send({
+            code: 200,
+            message: "Success",
+            response: data
+        })
+    }
+
+    async getViewMorePost(){
+        const { slug } = this.req.params
+        const data = await Category_Models.getViewMorePost(slug);
+        for (let index = 0; index < data.length; index++) {
+            const element = data[index];
+            element['avatar'] = element['avatar']!=''?this.req.protocol + '://' + this.req.headers.host + '/uploads/post/' + element['avatar']:'';
         }
         return this.res.send({
             code: 200,

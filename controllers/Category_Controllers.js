@@ -50,9 +50,9 @@ class Category_Controllers extends Controllers{
 
     typeList(){
         return [
-            {value: 'sanpham', name: 'Sản Phẩm'},
-            {value: 'blog', name: 'Tin Tức'},
-            {value: 'video', name: 'Video'}
+            {value: 'product-cate', name: 'Sản Phẩm'},
+            {value: 'blog-cate', name: 'Tin Tức'},
+            {value: 'video-cate', name: 'Video'}
         ];
     }
 

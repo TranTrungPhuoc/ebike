@@ -121,6 +121,31 @@ class Product_Api extends Api {
 
         const data = await Product_Models.m_detail(slug)
 
+        if (data.length > 0) {
+            const bredcrumbs = [];
+
+            if (data[0]['category'][0].categoryParent) {
+                bredcrumbs.push({
+                    title: data[0]['category'][0].categoryParent[0].title,
+                    slug: data[0]['category'][0].categoryParent[0].slug
+                })
+            }
+
+            bredcrumbs.push({
+                title: data[0]['category'][0].title,
+                slug: data[0]['category'][0].slug
+            });
+
+            bredcrumbs.push({
+                title: data[0].title,
+                slug: data[0].slug
+            });
+
+            data[0]['bredcrumbs'] = bredcrumbs;
+
+            delete data[0]['category'];
+        }
+
         this.res.send({
             code: 200,
             message: "Success",

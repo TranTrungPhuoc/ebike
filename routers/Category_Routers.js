@@ -58,9 +58,9 @@ router.get('/getItemsHome', (req, res) => new Api(req, res).getItemsHome())
 router.get('/getItemsRelative/:slug', (req, res) => new Api(req, res).getItemsRelative())
 router.get('/getItemsDetail/:slug', (req, res) => new Api(req, res).getItemsDetail())
 router.get('/getItemsDetailPost/:slug', (req, res) => new Api(req, res).getItemsDetailPost())
-router.get('/getViewMore/:slug', (req, res) => new Api(req, res).getViewMore())
 router.get('/getItemsHomeDetail/:slug', (req, res) => new Api(req, res).getItemsHomeDetail())
-
+router.get('/getViewMore/:slug', (req, res) => new Api(req, res).getViewMore())
+router.get('/getViewMorePost/:slug', (req, res) => new Api(req, res).getViewMorePost())
 router.get('/menuCategory', (req, res) => new Api(req, res).menuCategory())
 router.get('/home', (req, res) => new Api(req, res).categoryHome())
 

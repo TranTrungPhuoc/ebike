@@ -5,7 +5,7 @@ class Post_Api extends Api {
     constructor(req, res) {
         super(req, res)
     }
-    async new(){
+    async new() {
         const { type } = this.req.query
         if (type == undefined || type.trim() == '') {
             this.res.send({
@@ -136,44 +136,46 @@ class Post_Api extends Api {
         //     data[0]['user'][0]['avatar'] = data[0]['user'][0]['avatar'] != '' ? this.req.protocol + '://' + this.req.headers.host + '/uploads/user/' + data[0]['user'][0]['avatar'] : '';
         // }
 
-        const $ = cheerio.load(data[0]['content']);
-        let index = '';
-        $('h2, h3, h4').each((i, element) => {
-            const text = $(element).text();
-            const idValue = this.titleChangeToSlug(text);
-            $(element).attr('id', idValue);
-            index+='<div class="index-'+element.tagName+'">';
-            index+='<a href="#'+idValue+'">'+text+'</a></div>';
-        })
-
-        data[0]['content'] = data[0]['content'] != '' ? $('body').html(): '';
-
-        data[0]['index'] = index;
-
-        data[0]['user'] = data[0]['user'][0];
-
-        const bredcrumbs = [];
-
-        if(data[0]['category'][0].categoryParent){
-            bredcrumbs.push({
-                title: data[0]['category'][0].categoryParent[0].title,
-                slug: 'blog/'+data[0]['category'][0].categoryParent[0].slug
+        if (data.length > 0) {
+            const $ = cheerio.load(data[0]['content']);
+            let index = '';
+            $('h2, h3, h4').each((i, element) => {
+                const text = $(element).text();
+                const idValue = this.titleChangeToSlug(text);
+                $(element).attr('id', idValue);
+                index += '<div class="index-' + element.tagName + '">';
+                index += '<a href="#' + idValue + '">' + text + '</a></div>';
             })
+
+            data[0]['content'] = data[0]['content'] != '' ? $('body').html() : '';
+
+            data[0]['index'] = index;
+
+            data[0]['user'] = data[0]['user'][0];
+
+            const bredcrumbs = [];
+
+            if (data[0]['category'][0].categoryParent) {
+                bredcrumbs.push({
+                    title: data[0]['category'][0].categoryParent[0].title,
+                    slug: data[0]['category'][0].categoryParent[0].type + '/' + data[0]['category'][0].categoryParent[0].slug
+                })
+            }
+
+            bredcrumbs.push({
+                title: data[0]['category'][0].title,
+                slug: data[0]['category'][0].type + '/' + data[0]['category'][0].slug
+            });
+
+            bredcrumbs.push({
+                title: data[0].title,
+                slug: data[0].slug
+            });
+
+            data[0]['bredcrumbs'] = bredcrumbs
+
+            delete data[0]['category'];
         }
-
-        bredcrumbs.push({
-            title: data[0]['category'][0].title,
-            slug: 'blog/'+data[0]['category'][0].slug
-        });
-
-        bredcrumbs.push({
-            title: data[0].title,
-            slug: data[0].slug
-        });
-
-        data[0]['bredcrumbs'] = bredcrumbs
-
-        delete data[0]['category'];
 
         this.res.send({
             code: 200,

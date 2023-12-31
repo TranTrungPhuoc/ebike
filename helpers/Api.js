@@ -11,7 +11,7 @@ class Api{
             if (valueParentID.toString() == initial.toString()) {
                 newArray.push({
                     title: element['title'],
-                    slug: (element['type']=='sanpham'?element['slug']: (element['type']+'/'+element['slug'])),
+                    slug: (element['type']=='product-cate'?element['slug']: (element['type']+'/'+element['slug'])),
                     type: element['type'],
                     childs: this.recursive(array, element['_id'])
                 })

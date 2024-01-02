@@ -100,7 +100,7 @@ class Controllers {
         //     categorySelect = Html.form(Html.select(options, 'btn btn-outline-secondary has-ripple', 'parentID', this.req.query.parentID!=undefined?this.req.query.parentID.toString():'', ' onchange="this.form.submit()"', '__DanhMục__'), 'categoryForm');
         // }
         const addButton = Html.h5(Html.a(Html.icon('plus') + ' Thêm', '/admin/' + this.module + '/add', 'btn btn-outline-primary has-ripple'));
-        return Html.div('col-md-8 d-flex', addButton + categorySelect)
+        return Html.div('col-md-8 d-flex', (this.params(2)!='order')? addButton + categorySelect : '')
     }
 
     searchHtml() {
@@ -618,7 +618,7 @@ class Controllers {
     }
 
     tdEdit(id, module) {
-        return Html.a(Html.icon('edit'), '/admin/' + module + '/edit/' + id, 'btn btn-sm btn-outline-info has-ripple')
+        return !this.params(2) ? Html.a(Html.icon('edit'), '/admin/' + module + '/edit/' + id, 'btn btn-sm btn-outline-info has-ripple') : ''
     }
 
     tdDelete(id, value) {

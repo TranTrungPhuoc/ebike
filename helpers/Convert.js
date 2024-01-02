@@ -33,6 +33,7 @@ class Convert{
             case 'password': str='Mật Khẩu'; break;
             case 're_password': str='Xác Nhận Mật Khẩu'; break;
             case 'customer': str='Khách Hàng'; break;
+            case 'order': str='Đơn Hàng'; break;
             default: str='No Name'; break;
         }
         return str;

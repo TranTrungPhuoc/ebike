@@ -1,18 +1,14 @@
 const Models = require('../helpers/Models')
-const Schema = require('../schemas/Customer_Schema')
+const Schema = require('../schemas/Order_Schema')
 const Category_Model = require('../schemas/Category_Schema')
 const mongoose = require('mongoose');
-class Customer_Models extends Models{
+class Order_Models extends Models{
     constructor(table){
         super(table)
         this.table = Schema
     }
     async m_insert(object){
-        const check = await this.table.find({ $or: [{email: object.email}, {phone: object.phone}]}).exec();
-        if(check.length == 0){
-            return await this.table.create(object);
-        }
-        return check[0];
+        return await this.table.create(object);
     }
 
     async m_getList(){
@@ -33,7 +29,7 @@ class Customer_Models extends Models{
             { $match: { type, float: true, status: true } },
             {
                 $lookup: {
-                    from: 'Customers',
+                    from: 'Orders',
                     localField: '_id',
                     foreignField: 'parentID',
                     pipeline: [
@@ -41,27 +37,27 @@ class Customer_Models extends Models{
                         {$sort: {created: -1}},
                         {$project: { title: true, slug: true, avatar: true, description: true, created: true }}
                     ],
-                    as: 'Customers'
+                    as: 'Orders'
                 }
             },
             {
                 $project:{
                     title: true,
                     slug: true,
-                    Customers: true
+                    Orders: true
                 }
             }
         ]).exec()
     }
     async getRelative(slug){
-        const Customer = await this.table.find({slug}).exec();
-        if(Customer.length > 0){
+        const Order = await this.table.find({slug}).exec();
+        if(Order.length > 0){
             return await Category_Model.aggregate([
-                {$match: {_id: Customer[0].parentID} },
+                {$match: {_id: Order[0].parentID} },
                 {$sort: {created: -1}},
                 {
                     $lookup: {
-                        from: 'Customers',
+                        from: 'Orders',
                         localField: '_id',
                         foreignField: 'parentID',
                         pipeline: [
@@ -70,14 +66,14 @@ class Customer_Models extends Models{
                             {$limit: 7},
                             {$project: { title: true, slug: true, avatar: true, description: true, created: true }}
                         ],
-                        as: 'Customers'
+                        as: 'Orders'
                     }
                 },
                 {
                     $project:{
                         title: true,
                         slug: true,
-                        Customers: true
+                        Orders: true
                     }
                 }
             ]).exec()
@@ -220,4 +216,4 @@ class Customer_Models extends Models{
         ]).exec()
     }
 }
-module.exports = new Customer_Models
+module.exports = new Order_Models

@@ -21,7 +21,9 @@ const array = [
     'Site',
     'Mail',
     'Home',
-    'Library'
+    'Library',
+    'Delivery',
+    'Payment'
 ];
 for (let index = 0; index < array.length; index++) {
     const element = array[index];

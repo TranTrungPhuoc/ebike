@@ -14,6 +14,35 @@ class Site_Api extends Api{
             }
         })
     }
+
+    async getProvince(){
+        const response = await Site_Models.provinceList();
+        return this.res.send({
+            code: 200,
+            message: "Success",
+            response
+        })
+    }
+
+    async getDistrict(){
+        const citycode = this.req.query.citycode;
+        const response = await Site_Models.districtList(citycode);
+        return this.res.send({
+            code: 200,
+            message: "Success",
+            response
+        })
+    }
+
+    async getWards(){
+        const districtcode = this.req.query.districtcode;
+        const response = await Site_Models.wardsList(districtcode);
+        return this.res.send({
+            code: 200,
+            message: "Success",
+            response
+        })
+    }
 }
 
 module.exports = Site_Api

@@ -100,6 +100,8 @@ class Category_Api extends Api{
             data['slug'] = category.slug
             data['content'] = category.content
             data['type'] = category.type
+            data['metaTitle'] = category.metaTitle
+            data['metaDescription'] = category.metaDescription
             data['bredcrumbs'] = bredcrumbs
             data['Products'] = products
         }

@@ -1,42 +1,89 @@
 const Models = require('../helpers/Models')
-const Schema = require('../schemas/Product_Schema')
+const Schema = require('../schemas/Store_Schema')
 const Category_Model = require('../schemas/Category_Schema')
 const mongoose = require('mongoose');
-class Product_Models extends Models{
+class Store_Models extends Models{
     constructor(table){
         super(table)
         this.table = Schema
     }
-    async m_home(){
-        const data = await this.table.find().select('title slug price avatar').sort({created: -1}).limit(20).exec();
-        return data;
+    async m_insert(object){
+        const check = await this.table.find({ $or: [{email: object.email}, {phone: object.phone}]}).exec();
+        if(check.length == 0){
+            return await this.table.create(object);
+        }
+        return check[0];
     }
-    async getRelative(slug){
-        const Product = await this.table.find({slug}).select('parentID').exec();
+
+    async m_getList(){
+        return this.table.find({status: true}).exec();
+    }
+
+    async m_new(type){
         return await Category_Model.aggregate([
-            {$match: {_id: Product[0].parentID} },
+            {
+                $project:{
+                    title: true,
+                    slug: true,
+                    type: true,
+                    status: true,
+                    float: true
+                }
+            },
+            { $match: { type, float: true, status: true } },
             {
                 $lookup: {
-                    from: 'products',
+                    from: 'Stores',
                     localField: '_id',
                     foreignField: 'parentID',
                     pipeline: [
-                        {$match: {slug: {$ne: slug}}},
+                        {$limit: 10},
                         {$sort: {created: -1}},
-                        {$limit: 8},
-                        {$project: { title: true, slug: true, avatar: true, price: true, description: true, created: true }}
+                        {$project: { title: true, slug: true, avatar: true, description: true, created: true }}
                     ],
-                    as: 'Products'
+                    as: 'Stores'
                 }
             },
             {
                 $project:{
                     title: true,
                     slug: true,
-                    Products: true
+                    Stores: true
                 }
             }
         ]).exec()
+    }
+    async getRelative(slug){
+        const Store = await this.table.find({slug}).exec();
+        if(Store.length > 0){
+            return await Category_Model.aggregate([
+                {$match: {_id: Store[0].parentID} },
+                {$sort: {created: -1}},
+                {
+                    $lookup: {
+                        from: 'Stores',
+                        localField: '_id',
+                        foreignField: 'parentID',
+                        pipeline: [
+                            {$match: {slug: {$ne: slug}}},
+                            {$sort: {created: -1}},
+                            {$limit: 7},
+                            {$project: { title: true, slug: true, avatar: true, description: true, created: true }}
+                        ],
+                        as: 'Stores'
+                    }
+                },
+                {
+                    $project:{
+                        title: true,
+                        slug: true,
+                        Stores: true
+                    }
+                }
+            ]).exec()
+        }else{
+            return []
+        }
     }
     async viewMore(limit){
         return await this.table.aggregate([
@@ -77,7 +124,7 @@ class Product_Models extends Models{
             }}
         ]).exec()
     }
-    async m_detail(slug){
+    async getDetailSlug(slug){
         return await this.table.aggregate([
             {$match: {slug} },
             {
@@ -100,30 +147,6 @@ class Product_Models extends Models{
                         {$project: { title: true, slug: true, categoryParent: true }}
                     ],
                     as: 'category'
-                }
-            },
-            {
-                $lookup: {
-                    from: 'colors',
-                    localField: 'color',
-                    foreignField: '_id',
-                    pipeline: [
-                        { $match: {status: true} },
-                        { $project: { title: true } }
-                    ],
-                    as: 'color'
-                }
-            },
-            {
-                $lookup: {
-                    from: 'pins',
-                    localField: 'pin',
-                    foreignField: '_id',
-                    pipeline: [
-                        { $match: {status: true} },
-                        { $project: { title: true } }
-                    ],
-                    as: 'pin'
                 }
             },
             {
@@ -164,39 +187,37 @@ class Product_Models extends Models{
             { $sort: {created: -1} },
             { $skip: page },
             { $limit: limit },
-            // {
-            //     $lookup: {
-            //         from: 'categories',
-            //         localField: 'parentID',
-            //         foreignField: '_id',
-            //         pipeline: [
-            //             {$project: { title: true, slug: true }}
-            //         ],
-            //         as: 'category'
-            //     }
-            // },
-            // {
-            //     $lookup: {
-            //         from: 'users',
-            //         localField: 'userID',
-            //         foreignField: '_id',
-            //         pipeline: [
-            //             {$project: { email: true, avatar: true, description: true }}
-            //         ],
-            //         as: 'user'
-            //     }
-            // },
+            {
+                $lookup: {
+                    from: 'categories',
+                    localField: 'parentID',
+                    foreignField: '_id',
+                    pipeline: [
+                        {$project: { title: true, slug: true }}
+                    ],
+                    as: 'category'
+                }
+            },
+            {
+                $lookup: {
+                    from: 'users',
+                    localField: 'userID',
+                    foreignField: '_id',
+                    pipeline: [
+                        {$project: { email: true, avatar: true, description: true }}
+                    ],
+                    as: 'user'
+                }
+            },
             {
                 $project:{
-                    title: true,
-                    slug: true,
-                    description: true,
-                    avatar: true,
-                    price: true,
-                    view: true
+                    content: false,
+                    parentID: false,
+                    userID: false,
+                    __v: false
                 }
             }
         ]).exec()
     }
 }
-module.exports = new Product_Models
+module.exports = new Store_Models

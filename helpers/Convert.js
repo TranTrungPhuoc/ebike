@@ -34,6 +34,7 @@ class Convert{
             case 're_password': str='Xác Nhận Mật Khẩu'; break;
             case 'customer': str='Khách Hàng'; break;
             case 'order': str='Đơn Hàng'; break;
+            case 'store': str='Cửa Hàng'; break;
             default: str='No Name'; break;
         }
         return str;

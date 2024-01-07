@@ -197,7 +197,7 @@ class Category_Models extends Models {
 
     async getItemsDetail(slug, page, limit) {
         const _getIDs = await this.getIDs(slug)
-        const category = await this.table.find({ slug }).select('title slug type content').exec();
+        const category = await this.table.find({ slug }).select('title slug type content metaTitle metaDescription').exec();
         const skip = page > 1 ? ((page - 1) * limit) : 1
         const select = 'title slug avatar description price created'
         const products = await Product_Schema.find({ parentID: { $in: _getIDs.arrayID } }).sort({ created: -1 }).skip(skip).limit(limit).select(select).exec();

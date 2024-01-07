@@ -1,12 +1,16 @@
 const Api = require('../helpers/Api')
-const Product_Models = require('../models/Product_Models')
+const Store_Models = require('../models/Store_Models')
 const cheerio = require('cheerio');
-class Product_Api extends Api {
+class Store_Api extends Api {
     constructor(req, res) {
         super(req, res)
     }
-    async home(){
-        const data = await Product_Models.m_home()
+    async getList(){
+        const data = await Store_Models.m_getList()
+        for (let index = 0; index < data.length; index++) {
+            const element = data[index];
+            data[index]['avatar'] = element['avatar'] != '' ? this.req.protocol + '://' + this.req.headers.host + '/uploads/store/' + element['avatar'] : '';
+        }
         this.res.send({
             code: 200,
             message: "Success",
@@ -14,6 +18,26 @@ class Product_Api extends Api {
         })
     }
 
+    async new(){
+        const { type } = this.req.query
+        if (type == undefined || type.trim() == '') {
+            this.res.send({
+                code: 600,
+                message: "Success",
+                response: {
+                    error: "Slug không được rỗng."
+                }
+            })
+            return
+        }
+        const data = await Store_Models.m_new(type.trim())
+
+        this.res.send({
+            code: 200,
+            message: "Success",
+            response: data
+        })
+    }
     async getRelative() {
         const { slug } = this.req.params
         if (slug == undefined || slug.trim() == '') {
@@ -26,13 +50,13 @@ class Product_Api extends Api {
             })
             return
         }
-        const data = await Product_Models.getRelative(slug.trim())
+        const data = await Store_Models.getRelative(slug.trim())
 
         for (let index = 0; index < data.length; index++) {
             const element = data[index];
-            for (let j = 0; j < element['Products'].length; j++) {
-                const element2 = element['Products'][j];
-                // element2['avatar'] = element2['avatar'] != '' ? this.req.protocol + '://' + this.req.headers.host + '/uploads/Product/' + element2['avatar'] : '';
+            for (let j = 0; j < element['Stores'].length; j++) {
+                const element2 = element['Stores'][j];
+                element2['avatar'] = element2['avatar'] != '' ? this.req.protocol + '://' + this.req.headers.host + '/uploads/Store/' + element2['avatar'] : '';
             }
         }
 
@@ -44,11 +68,11 @@ class Product_Api extends Api {
     }
     async viewMore() {
         let { limit } = this.req.query
-        const data = await Product_Models.viewMore(limit != undefined ? parseInt(limit) : 10)
+        const data = await Store_Models.viewMore(limit != undefined ? parseInt(limit) : 10)
 
         for (let index = 0; index < data.length; index++) {
             const element = data[index];
-            element['avatar'] = element['avatar'] != '' ? this.req.protocol + '://' + this.req.headers.host + '/uploads/Product/' + element['avatar'] : '';
+            element['avatar'] = element['avatar'] != '' ? this.req.protocol + '://' + this.req.headers.host + '/uploads/Store/' + element['avatar'] : '';
         }
 
         this.res.send({
@@ -58,11 +82,11 @@ class Product_Api extends Api {
         })
     }
     async feature() {
-        const data = await Product_Models.feature()
+        const data = await Store_Models.feature()
 
         for (let index = 0; index < data.length; index++) {
             const element = data[index];
-            element['avatar'] = element['avatar'] != '' ? this.req.protocol + '://' + this.req.headers.host + '/uploads/Product/' + element['avatar'] : '';
+            element['avatar'] = element['avatar'] != '' ? this.req.protocol + '://' + this.req.headers.host + '/uploads/Store/' + element['avatar'] : '';
         }
 
         const one = []
@@ -105,9 +129,8 @@ class Product_Api extends Api {
         slug = slug.replace(/\@\-|\-\@|\@/gi, '');
         return slug;
     }
-    async detail() {
-        const { slug } = this.req.query
-        
+    async getDetailSlug() {
+        const { slug } = this.req.params
         if (slug == undefined || slug.trim() == '') {
             res.send({
                 code: 600,
@@ -118,43 +141,12 @@ class Product_Api extends Api {
             })
             return
         }
+        const data = await Store_Models.getDetailSlug(slug.trim())
 
-        const data = await Product_Models.m_detail(slug)
-
-        if (data.length > 0) {
-            const bredcrumbs = [];
-
-            if (data[0]['category'][0].categoryParent) {
-                bredcrumbs.push({
-                    title: data[0]['category'][0].categoryParent[0].title,
-                    slug: data[0]['category'][0].categoryParent[0].slug
-                })
-            }
-
-            bredcrumbs.push({
-                title: data[0]['category'][0].title,
-                slug: data[0]['category'][0].slug
-            });
-
-            bredcrumbs.push({
-                title: data[0].title,
-                slug: data[0].slug
-            });
-
-            data[0]['bredcrumbs'] = bredcrumbs;
-
-            delete data[0]['category'];
-        }
-
-        this.res.send({
-            code: 200,
-            message: "Success",
-            response: data
-        })
-
+        this.res.send({data})
         return
 
-        data[0]['avatar'] = data[0]['avatar'] != '' ? this.req.protocol + '://' + this.req.headers.host + '/uploads/Product/' + data[0]['avatar'] : '';
+        data[0]['avatar'] = data[0]['avatar'] != '' ? this.req.protocol + '://' + this.req.headers.host + '/uploads/Store/' + data[0]['avatar'] : '';
 
         if(data[0]['user'].length > 0){
             data[0]['user'][0]['avatar'] = data[0]['user'][0]['avatar'] != '' ? this.req.protocol + '://' + this.req.headers.host + '/uploads/user/' + data[0]['user'][0]['avatar'] : '';
@@ -196,7 +188,7 @@ class Product_Api extends Api {
             return
         }
 
-        const check_exist_db = await Product_Models.check(this.req.params.id);
+        const check_exist_db = await Store_Models.check(this.req.params.id);
         if (check_exist_db.length == 0) {
             this.res.send({
                 code: 602,
@@ -208,9 +200,9 @@ class Product_Api extends Api {
             return
         }
 
-        const data = await Product_Models.view(this.req.params.id, check_exist_db[0].view + 1)
+        const data = await Store_Models.view(this.req.params.id, check_exist_db[0].view + 1)
 
-        data[0]['avatar'] = data[0]['avatar'] != '' ? this.req.protocol + '://' + this.req.headers.host + '/uploads/Product/' + data[0]['avatar'] : '';
+        data[0]['avatar'] = data[0]['avatar'] != '' ? this.req.protocol + '://' + this.req.headers.host + '/uploads/Store/' + data[0]['avatar'] : '';
 
         this.res.send({
             code: 200,
@@ -220,10 +212,10 @@ class Product_Api extends Api {
     }
     async search() {
         const { key, page, limit } = this.req.query
-        const data = await Product_Models.search(key, parseInt(page ? (page == 1 ? 0 : page) : 0), parseInt(limit ?? 50))
+        const data = await Store_Models.search(key, parseInt(page ? (page == 1 ? 0 : page) : 0), parseInt(limit ?? 10))
         for (let index = 0; index < data.length; index++) {
             const element = data[index];
-            // element['avatar'] = element['avatar'] != '' ? this.req.protocol + '://' + this.req.headers.host + '/uploads/Product/' + element['avatar'] : '';
+            element['avatar'] = element['avatar'] != '' ? this.req.protocol + '://' + this.req.headers.host + '/uploads/Store/' + element['avatar'] : '';
         }
         this.res.send({
             code: 200,
@@ -231,6 +223,24 @@ class Product_Api extends Api {
             response: data
         })
     }
+    async insert(){
+        const {
+            fullname,
+            email,
+            phone,
+            nation,
+            province,
+            district,
+            wards,
+            address
+        } = this.req.body;
+        const response = await Store_Models.m_insert(this.req.body);
+        this.res.send({
+            code: 200,
+            message: "Success",
+            response
+        })
+    }
 }
 
-module.exports = Product_Api
+module.exports = Store_Api

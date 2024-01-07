@@ -618,7 +618,7 @@ class Controllers {
     }
 
     tdEdit(id, module) {
-        return !this.params(2) ? Html.a(Html.icon('edit'), '/admin/' + module + '/edit/' + id, 'btn btn-sm btn-outline-info has-ripple') : ''
+        return this.params(2)!='order' ? Html.a(Html.icon('edit'), '/admin/' + module + '/edit/' + id, 'btn btn-sm btn-outline-info has-ripple') : ''
     }
 
     tdDelete(id, value) {

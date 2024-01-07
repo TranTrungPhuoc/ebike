@@ -63,7 +63,7 @@ class Order_Controllers extends Controllers{
             {title: 'Khách Hàng', class:'', width: ''},
             {title: 'PT Giao Hàng', class:'', width: ''},
             {title: 'PT Thanh Toán', class:'', width: ''},
-            {title: 'Ngày Tạo', class: 'text-center', width: '10%'},
+            // {title: 'Ngày Tạo', class: 'text-center', width: '10%'},
             {title: 'Người Tạo', class: 'text-center', width: '10%'},
             {title: 'Đã Xử Lý', class: 'text-center', width: '5%'},
             {title: 'Chức Năng', class: 'text-center', width: '10%'}
@@ -97,7 +97,7 @@ class Order_Controllers extends Controllers{
             td+=Html.td(element['delivery'],' align-middle')
             td+=Html.td(element['payment'],' align-middle')
             td+=this.tdDate(element['created'])
-            td+=this.tdUser(user.length>0?user[0]['email'].split('@')[0]:'')
+            // td+=this.tdUser(user.length>0?user[0]['email'].split('@')[0]:'')
             td+=this.tdStatus(element['_id'], element['status'])
             td+=this.tdFunction(element['_id'], this.params(2), element[this.title])
             tr+=Html.tr(td,element['_id'])

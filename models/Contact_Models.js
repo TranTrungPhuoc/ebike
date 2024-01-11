@@ -5,5 +5,8 @@ class Contact_Models extends Models{
         super(table)
         this.table = Schema
     }
+    async m_insert(object){
+        return await this.table.create(object);
+    }
 }
 module.exports = new Contact_Models

@@ -103,19 +103,14 @@ class Category_Api extends Api{
             data['metaTitle'] = category.metaTitle
             data['metaDescription'] = category.metaDescription
             data['bredcrumbs'] = bredcrumbs
+            if(products.length>0){
+                for (let index = 0; index < products.length; index++) {
+                    const element = products[index];
+                    element['avatar'] = element['avatar']!=''?this.req.protocol + '://' + this.req.headers.host + '/uploads/product/' + element['avatar']:'';
+                }
+            }
             data['Products'] = products
         }
-
-        // if(data['Products'].length>0){
-        //     for (let index = 0; index < data['Products'].length; index++) {
-        //         const element = data['Products'][index];
-        //         for (let j = 0; j < element['Products'].length; j++) {
-        //             const element2 = element['Products'][j];
-        //             // element2['avatar'] = element2['avatar']!=''?this.req.protocol + '://' + this.req.headers.host + '/uploads/product/' + element2['avatar']:'';
-        //         }
-        //     }
-        // }
-
         return this.res.send({
             code: 200,
             message: "Success",

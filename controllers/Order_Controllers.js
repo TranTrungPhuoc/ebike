@@ -15,7 +15,7 @@ class Order_Controllers extends Controllers {
     constructor(req, res) {
         super(req, res)
         this.model = Order_Models
-        this.title = 'customer'
+        this.title = 'code'
     }
 
     async checkForm(id) {

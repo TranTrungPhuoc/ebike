@@ -62,8 +62,8 @@ class Customer_Controllers extends Controllers{
             {title: 'Số Điện Thoại', class:'', width: ''},
             {title: 'Địa Chỉ', class:'', width: ''},
             {title: 'Ngày Tạo', class: 'text-center', width: '10%'},
-            {title: 'Người Tạo', class: 'text-center', width: '10%'},
-            {title: 'Hiển Thị', class: 'text-center', width: '5%'},
+            // {title: 'Người Tạo', class: 'text-center', width: '10%'},
+            // {title: 'Hiển Thị', class: 'text-center', width: '5%'},
             {title: 'Chức Năng', class: 'text-center', width: '10%'}
         ]
     }
@@ -87,14 +87,14 @@ class Customer_Controllers extends Controllers{
         for (let index = 0; index < array.length; index++) {
             let td='';
             const element = array[index]
-            const user = await User_Models.getDetail({_id:element['userID']})
+            // const user = await User_Models.getDetail({_id:element['userID']})
             td+=Html.td(element[this.title],' align-middle')
             td+=Html.td(element['email'],' align-middle')
             td+=Html.td(element['phone'],' align-middle')
             td+=Html.td(element['address']+', '+element['wards']+', '+element['district']+', '+element['province'],' align-middle')
             td+=this.tdDate(element['created'])
-            td+=this.tdUser(user.length>0?user[0]['email'].split('@')[0]:'')
-            td+=this.tdStatus(element['_id'], element['status'])
+            // td+=this.tdUser(user.length>0?user[0]['email'].split('@')[0]:'')
+            // td+=this.tdStatus(element['_id'], element['status'])
             td+=this.tdFunction(element['_id'], this.params(2), element[this.title])
             tr+=Html.tr(td,element['_id'])
         }

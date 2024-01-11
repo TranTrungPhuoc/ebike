@@ -7,6 +7,10 @@ class Product_Api extends Api {
     }
     async home(){
         const data = await Product_Models.m_home()
+        for (let index = 0; index < data.length; index++) {
+            const element = data[index];
+            element['avatar'] = element['avatar'] != '' ? this.req.protocol + '://' + this.req.headers.host + '/uploads/product/' + element['avatar'] : '';
+        }
         this.res.send({
             code: 200,
             message: "Success",
@@ -32,7 +36,7 @@ class Product_Api extends Api {
             const element = data[index];
             for (let j = 0; j < element['Products'].length; j++) {
                 const element2 = element['Products'][j];
-                // element2['avatar'] = element2['avatar'] != '' ? this.req.protocol + '://' + this.req.headers.host + '/uploads/Product/' + element2['avatar'] : '';
+                element2['avatar'] = element2['avatar'] != '' ? this.req.protocol + '://' + this.req.headers.host + '/uploads/product/' + element2['avatar'] : '';
             }
         }
 
@@ -48,7 +52,7 @@ class Product_Api extends Api {
 
         for (let index = 0; index < data.length; index++) {
             const element = data[index];
-            element['avatar'] = element['avatar'] != '' ? this.req.protocol + '://' + this.req.headers.host + '/uploads/Product/' + element['avatar'] : '';
+            element['avatar'] = element['avatar'] != '' ? this.req.protocol + '://' + this.req.headers.host + '/uploads/product/' + element['avatar'] : '';
         }
 
         this.res.send({
@@ -62,7 +66,7 @@ class Product_Api extends Api {
 
         for (let index = 0; index < data.length; index++) {
             const element = data[index];
-            element['avatar'] = element['avatar'] != '' ? this.req.protocol + '://' + this.req.headers.host + '/uploads/Product/' + element['avatar'] : '';
+            element['avatar'] = element['avatar'] != '' ? this.req.protocol + '://' + this.req.headers.host + '/uploads/product/' + element['avatar'] : '';
         }
 
         const one = []
@@ -223,7 +227,7 @@ class Product_Api extends Api {
         const data = await Product_Models.search(key, parseInt(page ? (page == 1 ? 0 : page) : 0), parseInt(limit ?? 50))
         for (let index = 0; index < data.length; index++) {
             const element = data[index];
-            // element['avatar'] = element['avatar'] != '' ? this.req.protocol + '://' + this.req.headers.host + '/uploads/Product/' + element['avatar'] : '';
+            element['avatar'] = element['avatar'] != '' ? this.req.protocol + '://' + this.req.headers.host + '/uploads/product/' + element['avatar'] : '';
         }
         this.res.send({
             code: 200,

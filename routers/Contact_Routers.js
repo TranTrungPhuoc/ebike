@@ -7,4 +7,6 @@ router.get('/edit/:id', (req, res) => new Controllers(req, res).form())
 router.post('/process', (req, res) => new Controllers(req, res).process())
 router.post('/delete', (req, res) => new Controllers(req, res).delete())
 router.post('/status', (req, res) => new Controllers(req, res).status())
+const Api = require('../api/Contact_Api')
+router.post('/insert', (req, res) => new Api(req, res).insert())
 module.exports=router

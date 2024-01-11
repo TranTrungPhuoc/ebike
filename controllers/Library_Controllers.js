@@ -35,18 +35,17 @@ class Library_Controllers extends Controllers{
 
     typeList(){
         return [
-            {value: 'logoTop', name: 'Logo Top'},
+            {value: 'logoTop', name: 'LogoTop'},
             {value: 'favicon', name: 'Favicon'},
-            {value: 'logoBottom', name: 'Logo Bottom'},
-            {value: 'bannerTop', name: 'Banner Top'},
-            {value: 'logoTrade', name: 'Logo Trade'},
-            {value: 'trade', name: 'Trade Icon'}
+            {value: 'logoBottom', name: 'LogoBottom'},
+            {value: 'advertisment', name: 'Advertisment'},
         ]
     }
 
     async formList(data){
         return [
             { title: 'Tiêu Đề', type: 'text', col: 4, class: 'title form-control ', id: 'title', value: (data.length==0)?'':data[0]['title'], placeholder: '', require: false, disabled: false, check: true, event: '' },
+            { title: 'Link', type: 'text', col: 4, class: 'link form-control ', id: 'link', value: (data.length==0)?'':data[0]['link'], placeholder: '', require: false, disabled: false, check: true, event: '' },
             { title: 'Loại', type: 'select', col: 4, class: 'type form-control ', id: 'type', array: this.typeList(), require: false, disabled: false, check: false, event: '' },
         ]
     }
@@ -55,6 +54,7 @@ class Library_Controllers extends Controllers{
         return [
             {title: 'Avatar', class:'text-center', width: '5%'},
             {title: 'Tiêu Đề', class:'', width: ''},
+            {title: 'Link', class:'', width: ''},
             {title: 'Loại Ảnh', class: 'text-center', width: '10%'},
             {title: 'Ngày Tạo', class: 'text-center', width: '10%'},
             {title: 'Người Tạo', class: 'text-center', width: '15%'},
@@ -72,6 +72,7 @@ class Library_Controllers extends Controllers{
             const user = await User_Models.getDetail({_id:element['userID']})
             td+=this.tdImage(element['avatar']!=''?'/uploads/'+this.params(2)+'/'+element['avatar']:'/assets/images/photrader.jpeg',element['_id'])
             td+=Html.td(element[this.title], ' align-middle')
+            td+=Html.td(element['link'])
             td+=this.tdType(element['type'])
             td+=this.tdDate(element['created'])
             td+=this.tdUser(user[0]['email'])

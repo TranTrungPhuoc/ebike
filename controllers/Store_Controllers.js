@@ -48,6 +48,7 @@ class Store_Controllers extends Controllers{
             { title: 'Số Điện Thoại', type: 'text', col: 6, class: 'phone form-control ', id: 'phone', value: (data.length==0)?'':data[0]['phone'], placeholder: '', require: false, disabled: false, check: true, event: '' },
             { title: 'Địa chỉ', type: 'text', col: 6, class: 'address form-control ', id: 'address', value: (data.length==0)?'':data[0]['address'], placeholder: '', require: false, disabled: false, check: true, event: '' },
             { title: 'Thời Gian Làm Việc', type: 'text', col: 6, class: 'time form-control ', id: 'time', value: (data.length==0)?'':data[0]['time'], placeholder: '', require: false, disabled: false, check: true, event: '' },
+            { title: 'Bản Đồ', type: 'textarea', row:5, col: 12, class: 'map form-control ', id: 'map', value: (data.length==0)?'':data[0]['map'], placeholder: '', require: false, disabled: false, check: true, event: '' },
         ]
     }
 
@@ -56,7 +57,7 @@ class Store_Controllers extends Controllers{
             {title: 'Avatar', class:'text-center', width: '5%'},
             {title: 'Tên Cửa Hàng', class:'', width: ''},
             {title: 'Số Điện Thoại', class:'', width: ''},
-            {title: 'Địa Chỉ', class:'', width: ''},
+            // {title: 'Địa Chỉ', class:'', width: ''},
             {title: 'Thời Gian Làm Việc', class:'', width: ''},
             {title: 'Ngày Tạo', class: 'text-center', width: '10%'},
             {title: 'Người Tạo', class: 'text-center', width: '10%'},
@@ -88,7 +89,7 @@ class Store_Controllers extends Controllers{
             td+=this.tdImage(element['avatar']!=''?'/uploads/'+this.params(2)+'/'+element['avatar']:'/assets/images/photrader.png',element['_id'])
             td+=Html.td(element[this.title],' align-middle')
             td+=Html.td(element['phone'],' align-middle')
-            td+=Html.td(element['address'],' align-middle')
+            // td+=Html.td(element['address'],' align-middle')
             td+=Html.td(element['time'],' align-middle')
             td+=this.tdDate(element['created'])
             td+=this.tdUser(user.length>0?user[0]['email'].split('@')[0]:'')

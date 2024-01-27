@@ -26,7 +26,8 @@ const array = [
     'Payment',
     'Customer',
     'Order',
-    'Store'
+    'Store',
+    'TradingView'
 ];
 for (let index = 0; index < array.length; index++) {
     const element = array[index];

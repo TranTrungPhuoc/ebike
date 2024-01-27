@@ -54,7 +54,7 @@ class Post_Controllers extends Controllers{
     }
 
     async category(){
-        const array=await Category_Models.getFull({status: true, type: {$ne: 'sanpham'}}, 'title parentID')
+        const array=await Category_Models.getFull({status: true, type: {$ne: 'product-cate'}}, 'title parentID')
         let str = '<option value="">__Chọn__</option>';
         if(this.params(2) == 'add'){
             str += this.recursiveSelect(array);

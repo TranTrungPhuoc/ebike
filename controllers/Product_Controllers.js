@@ -53,7 +53,7 @@ class Product_Controllers extends Controllers{
     }
 
     async category(){
-        const array=await Category_Models.getFull({status: true, type: 'sanpham'}, 'title parentID')
+        const array=await Category_Models.getFull({status: true, type: 'product-cate'}, 'title parentID')
         let str = '<option value="">__Chọn__</option>';
         if(this.params(2) == 'add'){
             str += this.recursiveSelect(array);

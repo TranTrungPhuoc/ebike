@@ -92,7 +92,7 @@ class Category_Api extends Api{
         const limitDefault = parseInt(limit??12)
         const {category, products, bredcrumbs} = await Category_Models.getItemsDetail(slug, pageDefault, limitDefault);
         let count = await Category_Models.getTotalItemsDetail(slug);
-
+        
         let data = {}
 
         if(category){

@@ -182,7 +182,7 @@ class Category_Models extends Models {
     async getItemsDetailPost(slug, page, limit) {
         const _getIDs = await this.getIDs(slug)
         const category = await this.table.find({ slug }).select('title slug type content').exec();
-        const skip = page > 1 ? ((page - 1) * limit) : 1
+        const skip = page > 1 ? ((page - 1) * limit) : 0
         const select = 'title slug avatar description price created'
         const posts = await Post_Schema.find({ parentID: { $in: _getIDs.arrayID } }).sort({ created: -1 }).skip(skip).limit(limit).select(select).exec();
         return { category: category[0], posts, bredcrumbs: _getIDs.bredcrumbs }
@@ -198,8 +198,8 @@ class Category_Models extends Models {
     async getItemsDetail(slug, page, limit) {
         const _getIDs = await this.getIDs(slug)
         const category = await this.table.find({ slug }).select('title slug type content metaTitle metaDescription').exec();
-        const skip = page > 1 ? ((page - 1) * limit) : 1
-        const select = 'title slug avatar description price created'
+        const skip = page > 1 ? ((page - 1) * limit) : 0
+        const select = 'title slug avatar description price created';
         const products = await Product_Schema.find({ parentID: { $in: _getIDs.arrayID } }).sort({ created: -1 }).skip(skip).limit(limit).select(select).exec();
         return { category: category[0], products, bredcrumbs: _getIDs.bredcrumbs }
     }
